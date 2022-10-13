@@ -1,0 +1,9 @@
+{
+  "name": "sirocco",
+  "version": "1.0.0",
+  "description": "fusion of lit with tailwind. DRY development ",
+  "main": "index.ts",
+  "author": "Thorsten Scherler",
+  "license": "MIT",
+  "private": false
+}
