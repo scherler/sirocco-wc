@@ -100,8 +100,15 @@ command("watchCss", "Watch changes and rebuild")
 sirocco-wc init
 ```
 
-Scaffolding your project to add the infrastructure needed to develop as described in [template](./bin/template/README.md). 
+Scaffolding your project to add the infrastructure needed to develop as described in the [README](./bin/template/README.md) of the template. 
 This structure allows to quickly develop with lit and tailwind. Further our defaults are ready for being used in a jenkins plugin.
+
+...but wait there is still more to the template:
+
+- typescript based
+- playwright testing integration
+- prettier, lint and husky integration ready
+
 
 ### add - Create a new component
 
