@@ -110,7 +110,7 @@ sirocco-wc add myview views
 sirocco-wc buildCss
 ```
 
-Will genrate style definitions so they can be imported into your web components. The files are optimized to only include some general tailwind plugins and the classes you may defined in your css or template.
+Will generate style definitions so they can be imported into your web components. The files are optimized to only include some general tailwind plugins and the classes you may defined in your css or template.
 
 ### watchCss - Watch changes and rebuild
 
