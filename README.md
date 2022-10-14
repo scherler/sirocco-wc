@@ -1,6 +1,10 @@
 # Scaffolding Tool for the fusion of lit with tailwind. DRY development in the speed of light.
 
-This tool helps you to develop with lit and tailwind. It provides not only scaffolding but as well the infrastucture to generate component specific style definitions.
+This tool helps you to develop with [lit](https://lit.dev/docs/) and [tailwind](https://tailwindcss.com/docs). It provides not only scaffolding but as well the infrastucture to generate component specific style definitions.
+
+## Why the name?
+
+I was looking for a word that unifies with tailwind and lit (fart-on-fire 🤭 would have been a good picture that fits but ...). A Mediterranean wind that comes from the Sahara and reaches hurricane speeds in North Africa and Southern Europe, is the definition of sirocco and since I wrote it based in Sevilla, I found it fitting. 😁 
 
 ## Install
 

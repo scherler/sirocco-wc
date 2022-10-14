@@ -3,7 +3,8 @@
 
 # UI 
 
-The UI will be automatic created when you run `mvn install`.However, you can use different environments for development.
+The UI is thought to be consumed in jenkins and will be automatic created when you run `mvn install`. 
+However, you can use different environments for development.
 
 This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) recommendation.
 
@@ -31,7 +32,12 @@ To run a local development server that serves the basic demo located in `index.h
 ## Build for jenkins 
 You can build the project with the `yarn build` command which will invoke `yarn css:build` and then will use `parcel` to package the build into one file `[DEST]/[INDEX]` which contains all the necessary information for css and js (as well registering new web components).
 
-This is the file our main `jelly` imports and normally a hard refresh on the jenkins plugin should update the view.
+This is the file your main `jelly` should import and normally a hard refresh on the jenkins plugin should update the view after you have invoked the build again.
+
+```jelly
+<script type="module"  src="${resURL}/plugin/$PLUGIN~NAME/js/index.js" />
+<link rel="stylesheet" href="${resURL}/plugin/$PLUGIN~NAME/js/index.css" type="text/css" />
+```
 
 ### Create a new component
 
