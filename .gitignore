@@ -1,0 +1,17 @@
+.idea
+*.iml
+target
+work
+.parcel-cache
+dist
+src/main/webapp/js
+node_modules
+*.styles.ts
+node
+npm-debug.log
+# package-lock.json
+
+yarn-error.log
+/test-results/
+/playwright-report/
+/playwright/.cache/

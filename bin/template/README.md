@@ -1,0 +1,53 @@
+# [NAME]
+[DESCRIPTION]
+
+# UI 
+
+The UI will be automatic created when you run `mvn install`.However, you can use different environments for development.
+
+This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) recommendation.
+
+Our components are developed with [lit](https://lit.dev/docs/)
+
+## Prepare
+
+Run `yarn` if you have not run `mvn install`.
+
+## Development 
+
+For rapid development, we recommend to use the local demo environment and 
+as soon you want to test on the server run the `build`
+
+### Local Demo with `parcel`
+
+```bash
+yarn start
+
+Server running at http://localhost:1234
+```
+
+To run a local development server that serves the basic demo located in `index.html`
+
+## Build for jenkins 
+You can build the project with the `yarn build` command which will invoke `yarn css:build` and then will use `parcel` to package the build into one file `[DEST]/[INDEX]` which contains all the necessary information for css and js (as well registering new web components).
+
+This is the file our main `jelly` imports and normally a hard refresh on the jenkins plugin should update the view.
+
+### Create a new component
+
+```bash
+yarn :add newcomponent [componentType || 'components']
+```
+
+This will create a new component (or the `componentType` you have chosen) and link it in the project hierarchy. 
+
+For example if you want to create a new view you can do:
+
+```bash
+yarn :add myview views
+```
+
+### Styles
+
+We use [tailwind](https://tailwindcss.com/docs) as underlying framework, you can either use it in your html/js or use it in the css file of the component.
+We need the css file to exist since it will trigger the generation of the style definition file (it is heavily bootstrapped to only include the styles we need for the component). All components are using shadow DOM hence need to encapsulate their styles, since there is no leakage between the overall page and the component itself. e.g. you can have 2 classes with the same name defined but they are only in the scope of themselves not changing the other web component.
