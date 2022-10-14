@@ -107,6 +107,7 @@ This structure allows to quickly develop with lit and tailwind. Further our defa
 
 - typescript based
 - playwright testing integration
+- parcel zero config based compilation and optimisation integration.
 - prettier, lint and husky integration ready
 
 
