@@ -63,5 +63,5 @@ We need the css file to exist since it will trigger the generation of the style 
 In case your project is in the top level you can activate husky support by adding the following to the script section of your `package.json`:
 
 ```package.json
-    "prepare": "husky install",
+"prepare": "husky install",
 ```
