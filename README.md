@@ -49,6 +49,14 @@ yarn
 yarn start
 ```
 
+### Sample use in packacge.json
+
+```package.json
+"css:build": "sirocco-wc buildCss",
+"css:watch": "sirocco-wc watchCss",
+":add": "sirocco-wc add"
+```
+
 ## help 
 
 ```bash
@@ -92,7 +100,8 @@ command("watchCss", "Watch changes and rebuild")
 sirocco-wc init
 ```
 
-Scaffolding your project to add the infrastructure needed to develop as described in [template](./bin/template/README.md)
+Scaffolding your project to add the infrastructure needed to develop as described in [template](./bin/template/README.md). 
+This structure allows to quickly develop with lit and tailwind. Further our defaults are ready for being used in a jenkins plugin.
 
 ### add - Create a new component
 
