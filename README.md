@@ -1,6 +1,7 @@
-# Scaffolding Tool for the fusion of lit with tailwind. DRY development in the speed of light.
+# Scaffolding Tool for the fusion of lit with tailwind. 
+### DRY development in the speed of light with the zero configuration build tool parcel, playwright and jest testing. Jenkins plugin ready
 
-This tool helps you to develop with [lit](https://lit.dev/docs/) and [tailwind](https://tailwindcss.com/docs). It provides not only scaffolding but as well the infrastucture to generate component specific style definitions.
+This tool helps you to develop with [lit](https://lit.dev/docs/), [tailwind](https://tailwindcss.com/docs), [playwright](https://playwright.dev/) and [parcel](https://parceljs.org/). It provides not only scaffolding but as well the infrastucture to generate component specific style definitions. Further our defaults are ready for being used in a jenkins plugin.
 
 ## Why the name?
 
@@ -107,6 +108,7 @@ This structure allows to quickly develop with lit and tailwind. Further our defa
 
 - typescript based
 - playwright testing integration
+- jest testing integration
 - parcel zero config based compilation and optimisation integration.
 - prettier, lint and husky integration ready
 

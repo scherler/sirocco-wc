@@ -1,6 +1,6 @@
 {
   "name": "sirocco-wc",
-  "version": "0.0.20",
+  "version": "0.0.24",
   "keywords": [
     "sirocco",
     "wc",
@@ -14,9 +14,13 @@
     "Scaffolding",
     "UX",
     "UI",
-    "DRY"
+    "DRY",
+    "playwright",
+    "jest",
+    "testing",
+    "jenkinsCI"
   ],
-  "description": "Scaffolding Tool for the fusion of lit with tailwind. DRY development in the speed of light.",
+  "description": "Scaffolding Tool for the fusion of lit with tailwind. DRY development in the speed of light with the zero configuration build tool parcel, playwright and jest testing. jenkinsCI ready.",
   "author": "Thorsten Scherler",
   "license": "MIT",
   "private": false,
