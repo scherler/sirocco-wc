@@ -54,7 +54,7 @@ yarn start
 ```package.json
 "css:build": "sirocco-wc buildCss",
 "css:watch": "sirocco-wc watchCss",
-":add": "sirocco-wc add"
+":add": "SWC_PREFIX=my-sirocco- sirocco-wc add"
 ```
 
 ## help 

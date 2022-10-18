@@ -1,6 +1,21 @@
 {
   "name": "sirocco-wc",
-  "version": "0.0.19",
+  "version": "0.0.20",
+  "keywords": [
+    "sirocco",
+    "wc",
+    "webcomponents",
+    "lit",
+    "lit-element",
+    "tailwindcss",
+    "parcel",
+    "cli",
+    "shell",
+    "Scaffolding",
+    "UX",
+    "UI",
+    "DRY"
+  ],
   "description": "Scaffolding Tool for the fusion of lit with tailwind. DRY development in the speed of light.",
   "author": "Thorsten Scherler",
   "license": "MIT",
