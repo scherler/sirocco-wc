@@ -6,6 +6,10 @@
   "license": "MIT",
   "private": false,
   "main": "./bin/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scherler/sirocco-wc.git"
+  },
   "bin":  {
     "./bin/sirocco-wc": "./bin/main.js"
   },
