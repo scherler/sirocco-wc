@@ -15,20 +15,101 @@ npm i -g sirocco-wc
 
 You should install the tool globally so you can use it to generate node based projects with the `init` command.
 
-## Usage
+
+## Customize
+
+You can set different environments variable to change the default configuration of this tool, which you can find in `bin/config.js`:
+
+```js
+const defaultComponentType = process.env.SWC_TYPE || 'components';
+const prefix = process.env.SWC_PREFIX || 'swc-';
+const index = process.env.SWC_INDEX || 'index.ts';
+const srcDir = process.env.SWC_SRC || `src/main/ts`
+const destDir = process.env.SWC_DEST || `./src/main/webapp/js`
+const cssDir = process.env.SWC_CSS || `${srcDir}\/\*\*\/\*.css`
+```
+
+
+
+## Commands available
+### Version
+
+```bash
+sirocco-wc --version
+```
+### help 
+
+```bash
+sirocco-wc help
+COMMANDS — Type 'sirocco-wc help <command>' to get some help about a command
+```
+
+### init - Scaffolding your project
+
+```bash
+sirocco-wc ["init" || "i"]
+```
+
+Scaffolding your project to add the infrastructure needed to develop as described in the [README](./bin/template/README.md) of the template. 
+This structure allows to quickly develop with lit and tailwind. Further our defaults are ready for being used in a jenkins plugin.
+
+...but wait there is still more to the template:
+
+- typescript based
+- playwright testing integration
+- jest testing integration
+- parcel zero config based compilation and optimisation integration.
+- prettier, lint and husky integration ready
+
+
+### add - Create a new component
+
+.option("-t, --type <type>", "Component Type", {
+    default: defaultComponentType,
+  })
+
+```bash
+sirocco-wc ["add"||"a"] newcomponent [componentType || 'components']
+```
+
+This will create a new component (or the `componentType` you have chosen) and link it in the project hierarchy.
+
+For example if you want to create a new view you can do:
+
+```bash
+sirocco-wc add myview -t views
+```
+
+### buildCss - Building style.ts files
+
+```bash
+sirocco-wc ["buildCss"||"bc"]
+```
+
+Will generate style definitions so they can be imported into your web components. The files are optimized to only include some general tailwind plugins and the classes you may defined in your css or template.
+
+### watchCss - Watch changes and rebuild
+
+```bash
+sirocco-wc ["watchCss"||"wc"]
+```
+
+Will watch css and ts files and invoke the rebuild in case they have changed.
+
+## Usage sample
 
 In case you have not yet a node based project installed, you can use the init command, however, be aware that it will override existing files.
 
 ```bash
 mkdir test
 cd test
-sirocco-wc init
+sirocco-wc i
 ```
 
 After this you will need to create a first component and then the entry file that you have defined in the init command.
 
 ```bash
-sirocco-wc add test
+sirocco-wc a test
 echo "export * from './components/index';" > src/main/ts/index.ts
 ```
 
@@ -53,97 +134,7 @@ yarn start
 ### Sample use in packacge.json
 
 ```package.json
-"css:build": "sirocco-wc buildCss",
-"css:watch": "sirocco-wc watchCss",
+"css:build": "sirocco-wc bc",
+"css:watch": "sirocco-wc wc",
 ":add": "SWC_PREFIX=my-sirocco- sirocco-wc add"
 ```
-
-## help 
-
-```bash
-sirocco-wc help
-COMMANDS — Type 'sirocco-wc help <command>' to get some help about a command
-```
-
-## version
-
-```bash
-sirocco-wc --version
-```
-
-## Customize
-
-You can set different environments variable to change the default configuration of this tool, which you can find in `bin/config.js`:
-
-```js
-const defaultComponentType = process.env.SWC_TYPE || 'components';
-const prefix = process.env.SWC_PREFIX || 'swc-';
-const index = process.env.SWC_INDEX || 'index.ts';
-const srcDir = process.env.SWC_SRC || `src/main/ts`
-const destDir = process.env.SWC_DEST || `./src/main/webapp/js`
-const cssDir = process.env.SWC_CSS || `${srcDir}\/\*\*\/\*.css`
-```
-
-## Commands available
-
-```js
-command("init", "Scaffolding your project")
-
-command("add", "add component")
-  .argument("<component>", "Name of the component")
-  .option("-t, --type <type>", "Component Type", {
-    default: defaultComponentType,
-  })
-
-command("buildCss", "Building style.ts files")
-
-command("watchCss", "Watch changes and rebuild")
-```
-
-### init - Scaffolding your project
-
-```bash
-sirocco-wc init
-```
-
-Scaffolding your project to add the infrastructure needed to develop as described in the [README](./bin/template/README.md) of the template. 
-This structure allows to quickly develop with lit and tailwind. Further our defaults are ready for being used in a jenkins plugin.
-
-...but wait there is still more to the template:
-
-- typescript based
-- playwright testing integration
-- jest testing integration
-- parcel zero config based compilation and optimisation integration.
-- prettier, lint and husky integration ready
-
-
-### add - Create a new component
-
-```bash
-sirocco-wc add newcomponent [componentType || 'components']
-```
-
-This will create a new component (or the `componentType` you have chosen) and link it in the project hierarchy.
-
-For example if you want to create a new view you can do:
-
-```bash
-sirocco-wc add myview views
-```
-
-### buildCss - Building style.ts files
-
-```bash
-sirocco-wc buildCss
-```
-
-Will generate style definitions so they can be imported into your web components. The files are optimized to only include some general tailwind plugins and the classes you may defined in your css or template.
-
-### watchCss - Watch changes and rebuild
-
-```bash
-sirocco-wc watchCss
-```
-
-Will watch css and ts files and invoke the rebuild in case they have changed.

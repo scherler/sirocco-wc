@@ -42,15 +42,16 @@ This is the file your main `jelly` should import and normally a hard refresh on 
 ### Create a new component
 
 ```bash
-yarn :add newcomponent [componentType || 'components']
+yarn :add newcomponent [ -t componentType || 'components' ]
 ```
 
 This will create a new component (or the `componentType` you have chosen) and link it in the project hierarchy. 
+If you do not define it we will fallback to `process.env.SWC_PREFIX` or `components`
 
 For example if you want to create a new view you can do:
 
 ```bash
-yarn :add myview views
+yarn :add myview -t views
 ```
 
 ### Styles

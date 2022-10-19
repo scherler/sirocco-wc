@@ -10,10 +10,12 @@ const { defaultComponentType, sversion } = require("./config");
 program
     .version(sversion)
     .command("init", "Scaffolding your project")
+    .alias("i")
     .action(({ logger }) => {
         init(logger);
     })
     .command("add", "add component")
+    .alias("a")
     .argument("<component>", "Name of the component")
     .option("-t, --type <type>", "Component Type", {
         default: defaultComponentType,
@@ -23,10 +25,12 @@ program
         buildCss(logger);
     })
     .command("buildCss", "Building style.ts files")
+    .alias("bc")
     .action(({ logger }) => {
         buildCss(logger);
     })
     .command("watchCss", "Watch changes and rebuild")
+    .alias("wc")
     .action(({ logger }) => {
         watchCss(logger);
     })
