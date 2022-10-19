@@ -1,8 +1,6 @@
 const local = process.cwd().split('/');
 const NAME = local[local.length-1]
 const config = require('../config')
-const sversion = require('../../package.json').version
-const sname = require('../../package.json').name
 
 module.exports = [
     {
@@ -37,10 +35,14 @@ module.exports = [
     },
     {
       name: 'SVersion',
-      default: sversion
+      default: config.sversion
+    },
+    {
+      name: 'Prefix',
+      default: config.prefix
     },
     {
       name: 'SName',
-      default: sname
+      default: config.sname
     }
 ];

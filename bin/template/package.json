@@ -15,7 +15,7 @@
     "test": "playwright test",
     "start": "yarn css:build && concurrently -k -r 'yarn start:server' 'yarn css:watch'",
     "start:server": "parcel index.html",
-    ":add": "sirocco-wc add"
+    ":add": "SWC_PREFIX=[PREFIX] sirocco-wc add"
   },
   "dependencies": {
     "@fontsource/material-icons": "^4.5.4",

@@ -5,7 +5,7 @@ This tool helps you to develop with [lit](https://lit.dev/docs/), [tailwind](htt
 
 ## Why the name?
 
-I was looking for a word that unifies with tailwind and lit (fart-on-fire 🤭 would have been a good picture that fits but ...). A Mediterranean wind that comes from the Sahara and reaches hurricane speeds in North Africa and Southern Europe, is the definition of sirocco and since I wrote it based in Sevilla, I found it fitting. 😁 
+I was looking for a word that unifies tailwind with lit. A Mediterranean wind that comes from the Sahara and reaches hurricane speeds in North Africa and Southern Europe, is the definition of sirocco and since I wrote it based in Sevilla, I found it fitting. 😁 
 
 ## Install
 
@@ -62,9 +62,14 @@ yarn start
 
 ```bash
 sirocco-wc help
+COMMANDS — Type 'sirocco-wc help <command>' to get some help about a command
 ```
 
-COMMANDS — Type 'sirocco-wc help <command>' to get some help about a command
+## version
+
+```bash
+sirocco-wc --version
+```
 
 ## Customize
 

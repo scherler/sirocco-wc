@@ -9,6 +9,8 @@ const destDir = process.env.SWC_DEST || `./src/main/webapp/js`
 const cssDir = process.env.SWC_CSS || `${srcDir}\/\*\*\/\*.css`
 const source = path.join(localPath, srcDir);
 const sourceCss = path.join(localPath, cssDir);
+const sversion = require('../package.json').version
+const sname = require('../package.json').name
 
 // exports
 module.exports = {
@@ -20,5 +22,7 @@ module.exports = {
     sourceCss,
     index,
     destDir,
-    localPath
+    localPath,
+    sname,
+    sversion
 }
