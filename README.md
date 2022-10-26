@@ -1,3 +1,5 @@
+![Sirocco](logo.png "Sirocco") Sirocco-WC
+
 # Scaffolding Tool for the fusion of lit with tailwind. 
 ### DRY development in the speed of light with the zero configuration build tool parcel, playwright and jest testing. Jenkins plugin ready
 
