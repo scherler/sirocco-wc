@@ -7,6 +7,8 @@ This tool helps you to develop with [lit](https://lit.dev/docs/), [tailwind](htt
 
 I was looking for a word that unifies tailwind with lit. A Mediterranean wind that comes from the Sahara and reaches hurricane speeds in North Africa and Southern Europe, is the definition of sirocco and since I wrote it based in Sevilla, I found it fitting. 😁 
 
+![Sirocco wind](sirocco.jpg "Sirocco wind")
+
 ## Install
 
 ```bash
