@@ -1,4 +1,4 @@
-![Sirocco](logo.png "Sirocco") Sirocco-WC
+<div style="text-align:center"><img src="logo.png" /></div>
 
 # Scaffolding Tool for the fusion of lit with tailwind. 
 ### DRY development in the speed of light with the zero configuration build tool parcel, playwright and jest testing. Jenkins plugin ready
