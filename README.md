@@ -54,7 +54,8 @@ COMMANDS — Type 'sirocco-wc help <command>' to get some help about a command
 sirocco-wc ["init" || "i"]
 ```
 
-Scaffolding your project to add the infrastructure needed to develop as described in the [README](./bin/template/README.md) of the template. 
+Scaffolding your project to add the infrastructure needed to develop as described in the [README](./bin/template/README.md) of the template.
+
 This structure allows to quickly develop with lit and tailwind. Further our defaults are ready for being used in a jenkins plugin.
 
 ...but wait there is still more to the template:
@@ -64,7 +65,7 @@ This structure allows to quickly develop with lit and tailwind. Further our defa
 - jest testing integration
 - parcel zero config based compilation and optimisation integration.
 - prettier, lint and husky integration ready
-
+- npm publish ready
 
 ### add - Create a new component
 

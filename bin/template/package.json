@@ -1,9 +1,10 @@
 {
-    "name": "[NAME]",
-    "version": "[VERSION]",
-    "description": "[DESCRIPTION]",
-    "author": "[AUTHOR]",
-    "license": "[LICENSE]",
+  "name": "[NAME]",
+  "version": "[VERSION]",
+  "description": "[DESCRIPTION]",
+  "author": "[AUTHOR]",
+  "license": "[LICENSE]",
+  "main": "[DEST]/index.js",
   "scripts": {
     "build": "yarn css:build && yarn build:bundle",
     "build:bundle": "parcel build --public-url ./ [MAIN]/[INDEX] --dist-dir [DEST]",
