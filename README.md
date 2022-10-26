@@ -73,7 +73,7 @@ This structure allows to quickly develop with lit and tailwind. Further our defa
   })
 
 ```bash
-sirocco-wc ["add"||"a"] newcomponent [componentType || 'components']
+sirocco-wc ["add"||"a"] newcomponent [-t componentType || 'components']
 ```
 
 This will create a new component (or the `componentType` you have chosen) and link it in the project hierarchy.
