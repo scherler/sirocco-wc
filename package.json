@@ -30,7 +30,7 @@
     "url": "https://github.com/scherler/sirocco-wc.git"
   },
   "bin":  {
-    "./bin/sirocco-wc": "./bin/main.js"
+    "sirocco-wc": "./bin/main.js"
   },
   "exports": {
     "sirocco-wc": "./bin/main.js"
