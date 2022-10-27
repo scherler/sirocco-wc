@@ -1,6 +1,6 @@
 {
   "name": "sirocco-wc",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "keywords": [
     "sirocco",
     "wc",
@@ -36,6 +36,9 @@
     "sirocco-wc": "./bin/main.js"
   },
   "overrides": {
+    "lodash": "^4.17.21"
+  },
+  "resolutions": {
     "lodash": "^4.17.21"
   },
   "dependencies": {
