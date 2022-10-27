@@ -1,6 +1,6 @@
 {
   "name": "sirocco-wc",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "keywords": [
     "sirocco",
     "wc",
@@ -29,11 +29,14 @@
     "type": "git",
     "url": "https://github.com/scherler/sirocco-wc.git"
   },
-  "bin":  {
+  "bin": {
     "sirocco-wc": "./bin/main.js"
   },
   "exports": {
     "sirocco-wc": "./bin/main.js"
+  },
+  "overrides": {
+    "lodash": "^4.17.21"
   },
   "dependencies": {
     "@caporal/core": "^2.0.2",
