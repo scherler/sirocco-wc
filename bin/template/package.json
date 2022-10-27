@@ -36,7 +36,7 @@
     "@swc/helpers": "^0.4.11",
     "axios": "^0.27.2",
     "lit": "^2.3.1",
-    "[SNAME]": "[SVERSION]"
+    "[SNAME]": "^[SVERSION]"
   },
   "devDependencies": {
     "@open-wc/eslint-config": "^8.0.2",

@@ -1,6 +1,6 @@
 {
   "name": "sirocco-wc",
-  "version": "0.0.37",
+  "version": "1.0.1",
   "keywords": [
     "sirocco",
     "wc",
@@ -39,7 +39,7 @@
     "lodash": "^4.17.21"
   },
   "resolutions": {
-    "lodash": "^4.17.21"
+    "**/lodash": "^4.17.21"
   },
   "dependencies": {
     "@caporal/core": "^2.0.2",
