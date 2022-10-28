@@ -42,6 +42,7 @@ module.exports = (logger) => {
         });
         logger.info("Moving files to final destination");
 
+        shell.mv(`${localPathTmp}/_.gitignore`, `${localPathTmp}/.gitignore`);
         shell.mv(`${localPathTmp}/.*`, localPath);
         shell.mv(`${localPathTmp}/*`, localPath);
         shell.rm('-rf', localPathTmp)
