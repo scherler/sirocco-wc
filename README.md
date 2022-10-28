@@ -60,6 +60,7 @@ This structure allows to quickly develop with lit and tailwind. Further our defa
 
 ...but wait there is still more to the template:
 
+- yarn2 based
 - typescript based
 - playwright testing integration
 - jest testing integration
