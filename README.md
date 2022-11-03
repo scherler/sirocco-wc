@@ -56,7 +56,7 @@ sirocco-wc ["init" || "i"]
 
 Scaffolding your project to add the infrastructure needed to develop as described in the [README](./bin/template/README.md) of the template.
 
-This structure allows to quickly develop with lit and tailwind. Further our defaults are ready for being used in a jenkins plugin.
+This structure allows to quickly develop with lit and tailwind. Further our defaults are ready for being used in a jenkins plugin. It will further direcly migrate to yarn 2 and install some recommended plugins.
 
 ...but wait there is still more to the template:
 
@@ -130,17 +130,16 @@ The last step is to update the `index.html` that was generated earlier to use yo
 
 Once you have the basic structure set up, you can either use the project commands or the sirocco-wc once.
 
-First, you need to install the dependencies and then can run the local dev server.
+First, you need to run the local dev server.
 
 ```bash
-yarn
 yarn start
 ```
 
 ### Sample use in packacge.json
 
-```package.json
+```package.jsonc
 "css:build": "sirocco-wc bc",
 "css:watch": "sirocco-wc wc",
-":add": "SWC_PREFIX=my-sirocco- sirocco-wc add"
+":add": "SWC_PREFIX=my-sirocco- sirocco-wc a"
 ```
