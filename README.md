@@ -19,7 +19,6 @@ npm i -g sirocco-wc
 
 You should install the tool globally so you can use it to generate node based projects with the `init` command.
 
-
 ## Customize
 
 You can set different environments variable to change the default configuration of this tool, which you can find in `bin/config.js`:
@@ -32,8 +31,6 @@ const srcDir = process.env.SWC_SRC || `src/main/ts`
 const destDir = process.env.SWC_DEST || `./src/main/webapp/js`
 const cssDir = process.env.SWC_CSS || `${srcDir}\/\*\*\/\*.css`
 ```
-
-
 
 ## Commands available
 ### Version
@@ -123,7 +120,6 @@ The last step is to update the `index.html` that was generated earlier to use yo
 
 ```html 
   <body>
-    add your first web component here
     <swc-test></swc-test>
   </body>
   ```

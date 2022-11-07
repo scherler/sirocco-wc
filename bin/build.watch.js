@@ -2,7 +2,7 @@ const path = require("path");
 const chokidar = require("chokidar");
 
 const buildCss = require("./build.css.js");
-const { sourceCss } = require("./config");
+const { sourceCss, localPath } = require("./config");
 
 module.exports = (logger) => {
   chokidar
