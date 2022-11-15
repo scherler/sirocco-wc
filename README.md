@@ -136,7 +136,7 @@ First, you need to run the local dev server.
 yarn start
 ```
 
-### Sample use in packacge.json
+### Sample use in package.json
 
 ```package.jsonc
 "css:build": "sirocco-wc bc",
