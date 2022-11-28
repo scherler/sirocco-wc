@@ -39,6 +39,44 @@ This is the file your main `jelly` should import and normally a hard refresh on 
 <link rel="stylesheet" href="${resURL}/plugin/$PLUGIN~NAME/js/index.css" type="text/css" />
 ```
 
+## How to develop the front end
+
+Typically you would use jelly tags to produce the UI for Jenkins however to allow a modern architecture we decided to use typescript instead.
+
+The source code can be found in `src/main/ts` within that directory we expose components, views, and helper.
+
+```bash
+src/main/ts ◎ tree -L 1 .
+.
+├── components
+├── helper
+├── index.ts
+└── views
+```
+
+In the helper directory, we expose functions that are used in the components and the views.
+
+The view folder contains aggregations of components and glue HTML. The principal view for the jelly front-end is `main`. Here we define the tabs which are views on their own. To render the tabs we are using material ui web components, actually, for all common components, we fall back to mwc components where it is possible. 
+
+The configuration of the application is done using the attribute `configstring`. In the index.jelly we are parsing the information we have injected from the java class (aka `${it.}`) and hand them over to the front end.
+
+We are using [lit](https://lit.dev/), to learn more about lit we recommend the interactive [tutorials](https://lit.dev/tutorials/)
+
+### The anatomy of a view/component
+
+```bash
+◎ tree -L 1 src/main/ts/views/main 
+src/main/ts/views/main
+├── index.ts
+├── Main.css
+├── Main.styles.ts
+└── Main.ts
+
+0 directories, 4 files
+```
+
+To allow automatic wiring and export of all web components, we recommend using one folder per component/view and [barrels](https://basarat.gitbook.io/typescript/main-1/barrel). The `*.styles.ts` file is generated so do not edit it since it will be overridden by the build process. You can either use the `*.css` file to define your styles or use tailwind-driven classes, which will then be exported to the `*.styles.ts` file.
+
 ### Create a new component
 
 ```bash
