@@ -1,6 +1,6 @@
 {
   "name": "sirocco-wc",
-  "version": "1.1.7",
+  "version": "1.1.9",
   "keywords": [
     "sirocco",
     "wc",
@@ -49,6 +49,7 @@
     "postcss": "^8.4.18",
     "prompt": "^1.3.0",
     "shelljs": "^0.8.5",
+    "strip-comments": "^2.0.1",
     "tailwindcss": "^3.2.1"
   },
   "packageManager": "yarn@3.2.4"

@@ -111,7 +111,7 @@ cd test
 sirocco-wc i
 ```
 
-After this you will need to create a first component and then the entry file that you have defined in the init command.
+After this you will need to create a first component and then the entry file that you have defined in the init command. You can use `yarn :add test` to use the prefix that you have choosen in the init command.
 
 ```bash
 sirocco-wc a test

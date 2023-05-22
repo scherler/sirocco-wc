@@ -3,6 +3,8 @@ const fs = require('fs');
 const tailwindcss = require('tailwindcss');
 const postcss = require('postcss');
 const autoprefixer = require('autoprefixer');
+const strip = require('strip-comments');
+
 
 module.exports = (filePath, tailwindConfig, logger) => {
   // parse the filePath for use later
@@ -11,7 +13,7 @@ module.exports = (filePath, tailwindConfig, logger) => {
   // console.log(parsedFilePath,filePath);
   // figure out ahead of time what the output path should be
   // based on the original file path
-  // ALL output files will end with `.css.ts
+  // ALL output files will end with `.styles.ts
   // since all outputs will be css as exported TS strings
   const styleTSFilePath = path.format({
     ...parsedFilePath,
@@ -57,7 +59,7 @@ ${styleOutput}`;
       // here its TS
       const cssToTSContents = `import { css } from 'lit';
 
-export default css\`${result.css}\`;
+export default css\`${strip(result.css.replace(/`/g, ''))}\`;
 `;
 
       // write the final file back to its location next to the
