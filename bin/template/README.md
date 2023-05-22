@@ -104,3 +104,10 @@ In case your project is in the top level you can activate husky support by addin
 ```package.json
 "prepare": "husky install",
 ```
+
+In case your project is not in the top level you can still activate it, however you need to change the command and adopt the path to:
+
+
+```package.json
+"prepare": "cd .. && husky install ./YOUR_PROJECT/.husky",
+```
