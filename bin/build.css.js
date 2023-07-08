@@ -59,7 +59,7 @@ ${styleOutput}`;
       // here its TS
       const cssToTSContents = `import { css } from 'lit';
 
-export default css\`${strip(result.css.replace(/`/g, ''))}\`;
+export default css\`${strip(result.css.replace(/`/g, '').toString('utf8'))}\`;
 `;
 
       // write the final file back to its location next to the

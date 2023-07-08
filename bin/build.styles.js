@@ -1,7 +1,7 @@
 const glob = require("glob");
 const path = require('path');
 
-const { sourceCss, localPath} = require("./config");
+const { sourceCss, config} = require("./config");
 
 const buildCss = require("./build.css.js");
 
@@ -14,7 +14,6 @@ module.exports = (logger) => {
     throw new Error(sourceCss, "why you no provide files?");
   }
   styleFiles.forEach((filePath) => {
-    
-    buildCss(filePath, require(path.join(localPath, 'tailwind.config.js')), logger);
+    buildCss(filePath, config, logger);
   });
 };

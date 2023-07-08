@@ -17,7 +17,7 @@ module.exports = (logger, args, options) => {
     const destCss = path.join(sourceDir, `${newClass}.css`);
 
     const templateIndex = `export * from './${newClass}';
-export * as ${newClass}Style from './${newClass}.styles';
+export { default as ${newClass}Style } from './${newClass}.styles';
 `;
     const templateTs = `import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators'
