@@ -31,7 +31,6 @@ module.exports = {
     source,
     sourceCss,
     index,
-    destDir,
     localPath,
     sname,
     sversion, 
