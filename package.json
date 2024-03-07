@@ -1,6 +1,6 @@
 {
   "name": "sirocco-wc",
-  "version": "1.1.19",
+  "version": "1.1.24",
   "keywords": [
     "sirocco",
     "wc",
@@ -30,7 +30,7 @@
   },
   "bin": "./bin/main.js",
   "exports": {
-    "sirocco-wc": "./bin/main.js"
+    "./tailwindcss": "./tailwindcss.js"
   },
   "overrides": {
     "lodash": "^4.17.21"
