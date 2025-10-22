@@ -4,7 +4,6 @@
   "description": "[DESCRIPTION]",
   "author": "[AUTHOR]",
   "license": "[LICENSE]",
-  "main": "[DEST]/index.js",
   "scripts": {
     "build": "yarn css:build && yarn build:bundle",
     "build:bundle": "parcel build --public-url ./ [MAIN]/[INDEX] --dist-dir [DEST]",
@@ -21,9 +20,9 @@
   "dependencies": {
     "@fontsource/roboto": "^5.0.13",
     "@swc/helpers": "^0.5.11",
+    "[SNAME]": "^[SVERSION]",
     "axios": "^1.12.2",
-    "lit": "^3.1.4",
-    "[SNAME]": "^[SVERSION]"
+    "lit": "^3.1.4"
   },
   "devDependencies": {
     "@open-wc/eslint-config": "^12.0.3",
@@ -109,7 +108,7 @@
   "browserslist": [
     "Chrome > 50"
   ],
-  "packageManager": "yarn@3.2.4",
+  "packageManager": "yarn@4.10.3",
   "resolutions": {
     "glob": "^10.4.2",
     "inflight": "npm:@mapbox/node-inflight@^1.1.0"
