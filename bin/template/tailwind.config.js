@@ -1,9 +1,9 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/ts/**/*.{ts,pcss}'],
+  content: ['./src/main/ts/**/*.{ts,html}'],
   corePlugins: {
     preflight: false,
   },
-
   theme: {
     extend: {
       colors: {
@@ -30,7 +30,6 @@ module.exports = {
         'grey-dark': "#333333",
         'grey-light': "#c8c8c8",
         'tabel-seperator': '#EAEFF2',
-
       },
       screens: {
         desktop: { min: '1440' },
@@ -48,21 +47,14 @@ module.exports = {
         'trafficlight-yellow': '#A96600',
         'trafficlight-red': '#E22B2F',
       },
-
       fontFamily: {
-        default: [
-          '"Roboto"',
-        ],
-        sans: [
-          '"Roboto Sans"',
-        ],
+        default: ['"Roboto"'],
+        sans: ['"Roboto Sans"'],
         'open-sans': ['"Open Sans"'],
         'source-sans-pro': ['"Source Sans Pro"'],
         montserrat: ['"Montserrat"'],
       },
     },
   },
-  variants: {},
-  plugins: [
-  ],
+  plugins: [],
 };

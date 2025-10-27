@@ -831,55 +831,465 @@ module.exports = {
 }
 ```
 
-#### Theming with CSS Custom Properties
+#### Global Theming System (Best Practice)
+
+**CRITICAL**: This is the RECOMMENDED approach for theming in sirocco-wc applications. It provides single source of truth, dogfooding of Tailwind, and clean separation of concerns.
+
+**The Complete Flow**:
+```
+1. tailwind.config.js → Define colors once in structured format
+2. ThemesVariables.css → Reference using theme() function
+3. Components → Use global CSS variables
+4. ThemeToggle → Controls data-theme attribute
+5. Result → Entire app updates instantly
+```
+
+##### Step 1: Structure Colors in tailwind.config.js
+
+Define colors using `light` and `dark` objects with semantic names:
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        // Light theme colors
+        light: {
+          // Surface colors - backgrounds
+          'surface-primary': '#ffffff',
+          'surface-secondary': '#f8fafc',
+          'surface-tertiary': '#f1f5f9',
+          'surface-accent': '#eff6ff',
+
+          // Text colors
+          'text-primary': '#0f172a',
+          'text-secondary': '#475569',
+          'text-tertiary': '#64748b',
+          'text-accent': '#2563eb',
+          'text-inverse': '#ffffff',
+
+          // Border colors
+          'border-subtle': '#e2e8f0',
+          'border-default': '#cbd5e1',
+          'border-emphasis': '#94a3b8',
+
+          // Action/Interactive colors
+          'action-primary': '#2563eb',
+          'action-primary-hover': '#1d4ed8',
+          'action-secondary': '#7c3aed',
+          'action-secondary-hover': '#6d28d9',
+
+          // Status colors
+          'status-success': '#16a34a',
+          'status-warning': '#ea580c',
+          'status-error': '#dc2626',
+          'status-info': '#0284c7',
+        },
+
+        // Dark theme colors
+        dark: {
+          'surface-primary': '#0f172a',
+          'surface-secondary': '#1e293b',
+          'surface-tertiary': '#334155',
+          'surface-accent': '#1e3a8a',
+
+          'text-primary': '#f1f5f9',
+          'text-secondary': '#cbd5e1',
+          'text-tertiary': '#94a3b8',
+          'text-accent': '#60a5fa',
+          'text-inverse': '#0f172a',
+
+          'border-subtle': '#334155',
+          'border-default': '#475569',
+          'border-emphasis': '#64748b',
+
+          'action-primary': '#3b82f6',
+          'action-primary-hover': '#60a5fa',
+          'action-secondary': '#8b5cf6',
+          'action-secondary-hover': '#a78bfa',
+
+          'status-success': '#22c55e',
+          'status-warning': '#f97316',
+          'status-error': '#ef4444',
+          'status-info': '#0ea5e9',
+        },
+      },
+    },
+  },
+  plugins: [],
+};
+```
+
+**Why This Structure?**
+- ✅ Single source of truth for all colors
+- ✅ Semantic naming: "surface-primary" is clearer than "#ffffff"
+- ✅ Easy to maintain: Change once, updates everywhere
+- ✅ Type-safe: Tailwind validates at build time
+- ✅ IntelliSense: Editor autocomplete works
+
+##### Step 2: Reference in ThemesVariables.css
+
+Use Tailwind's `theme()` function to dogfood your own config:
+
+```css
+/* src/main/ts/common/ThemesVariables.css */
+
+/**
+ * Global Theme Variables
+ * Uses data-theme attribute on root element to switch between light and dark themes.
+ * All components inherit these variables automatically.
+ * Colors are defined in tailwind.config.js and referenced here using theme() function.
+ */
+
+/* Light Theme (default) */
+:root,
+[data-theme='light'] {
+  /* Surface colors - backgrounds */
+  --surface-primary: theme('colors.light.surface-primary');
+  --surface-secondary: theme('colors.light.surface-secondary');
+  --surface-tertiary: theme('colors.light.surface-tertiary');
+  --surface-accent: theme('colors.light.surface-accent');
+
+  /* Text colors */
+  --text-primary: theme('colors.light.text-primary');
+  --text-secondary: theme('colors.light.text-secondary');
+  --text-tertiary: theme('colors.light.text-tertiary');
+  --text-accent: theme('colors.light.text-accent');
+  --text-inverse: theme('colors.light.text-inverse');
+
+  /* Border colors */
+  --border-subtle: theme('colors.light.border-subtle');
+  --border-default: theme('colors.light.border-default');
+  --border-emphasis: theme('colors.light.border-emphasis');
+
+  /* Action/Interactive colors */
+  --action-primary: theme('colors.light.action-primary');
+  --action-primary-hover: theme('colors.light.action-primary-hover');
+  --action-secondary: theme('colors.light.action-secondary');
+  --action-secondary-hover: theme('colors.light.action-secondary-hover');
+
+  /* Status colors */
+  --status-success: theme('colors.light.status-success');
+  --status-warning: theme('colors.light.status-warning');
+  --status-error: theme('colors.light.status-error');
+  --status-info: theme('colors.light.status-info');
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 50%, #fce7f3 100%);
+  --gradient-accent: linear-gradient(135deg, theme('colors.light.action-primary') 0%, theme('colors.light.action-secondary') 100%);
+}
+
+/* Dark Theme */
+[data-theme='dark'] {
+  --surface-primary: theme('colors.dark.surface-primary');
+  --surface-secondary: theme('colors.dark.surface-secondary');
+  --surface-tertiary: theme('colors.dark.surface-tertiary');
+  --surface-accent: theme('colors.dark.surface-accent');
+
+  --text-primary: theme('colors.dark.text-primary');
+  --text-secondary: theme('colors.dark.text-secondary');
+  --text-tertiary: theme('colors.dark.text-tertiary');
+  --text-accent: theme('colors.dark.text-accent');
+  --text-inverse: theme('colors.dark.text-inverse');
+
+  --border-subtle: theme('colors.dark.border-subtle');
+  --border-default: theme('colors.dark.border-default');
+  --border-emphasis: theme('colors.dark.border-emphasis');
+
+  --action-primary: theme('colors.dark.action-primary');
+  --action-primary-hover: theme('colors.dark.action-primary-hover');
+  --action-secondary: theme('colors.dark.action-secondary');
+  --action-secondary-hover: theme('colors.dark.action-secondary-hover');
+
+  --status-success: theme('colors.dark.status-success');
+  --status-warning: theme('colors.dark.status-warning');
+  --status-error: theme('colors.dark.status-error');
+  --status-info: theme('colors.dark.status-info');
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+
+  --gradient-hero: linear-gradient(135deg, #1e293b 0%, #334155 50%, #3730a3 100%);
+  --gradient-accent: linear-gradient(135deg, theme('colors.dark.action-primary') 0%, theme('colors.dark.action-secondary') 100%);
+}
+
+/* Automatic dark mode based on system preference (fallback) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    /* Uses dark theme when system preference is dark and no explicit theme set */
+    --surface-primary: theme('colors.dark.surface-primary');
+    --surface-secondary: theme('colors.dark.surface-secondary');
+    /* ... all dark theme variables ... */
+  }
+}
+```
+
+**Import in entry point**:
+```typescript
+// src/main/ts/index.ts
+import './views';
+import './components';
+import './common/ThemesVariables.css'; // Import global theme
+```
+
+##### Step 3: Components Use Global Variables
+
+Components simply reference the global CSS variables - NO per-component theme definitions needed:
+
+```css
+/* Card.css - Clean and simple! */
+:host {
+  @apply block;
+}
+
+.card {
+  background-color: var(--surface-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+}
+
+.card:hover {
+  border-color: var(--border-emphasis);
+  box-shadow: var(--shadow-xl);
+}
+
+.card-title {
+  color: var(--text-primary);
+  @apply text-xl font-bold;
+}
+
+.card-description {
+  color: var(--text-secondary);
+  @apply text-sm;
+}
+
+.button {
+  background-color: var(--action-primary);
+  color: var(--text-inverse);
+}
+
+.button:hover {
+  background-color: var(--action-primary-hover);
+}
+```
+
+**What NOT to Do**:
+```css
+/* ❌ DON'T define theme in each component */
+:host {
+  --card-bg: theme('colors.white');
+}
+@media (prefers-color-scheme: dark) {
+  :host {
+    --card-bg: theme('colors.gray.800');
+  }
+}
+```
+
+##### Step 4: Self-Contained ThemeToggle Component
+
+Create a theme toggle component that manages its own state (Separation of Concerns):
 
 ```typescript
-@customElement('swc-themed')
-export class Themed extends LitElement {
-  static styles = [
-    Styles,
-    css`
-      :host {
-        --primary-color: var(--jenkins-primary, #3b82f6);
-        --background: var(--jenkins-background, #ffffff);
-        --text: var(--jenkins-text, #000000);
-      }
+// ThemeToggle.ts
+import { LitElement, html } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
+import Styles from './ThemeToggle.styles';
 
-      .card {
-        background: var(--background);
-        color: var(--text);
-        border: 2px solid var(--primary-color);
-      }
-    `
-  ];
+export type Theme = 'light' | 'dark' | 'auto';
+
+@customElement('swc-theme-toggle')
+export class ThemeToggle extends LitElement {
+  static styles = [Styles];
+
+  @state()
+  private currentTheme: Theme = 'auto';
+
+  connectedCallback() {
+    super.connectedCallback();
+    // Load saved theme from localStorage
+    const savedTheme = localStorage.getItem('theme') as Theme;
+    if (savedTheme) {
+      this.currentTheme = savedTheme;
+      this.applyTheme(savedTheme);
+    }
+  }
+
+  private handleThemeChange(theme: Theme) {
+    this.currentTheme = theme;
+    localStorage.setItem('theme', theme);
+    this.applyTheme(theme);
+  }
+
+  private applyTheme(theme: Theme) {
+    const root = document.documentElement;
+
+    if (theme === 'auto') {
+      // Remove data-theme to let CSS media query handle it
+      root.removeAttribute('data-theme');
+    } else {
+      // Set explicit theme
+      root.setAttribute('data-theme', theme);
+    }
+  }
 
   render() {
     return html`
-      <div class="card">
-        Themed content
+      <div class="theme-toggle">
+        <button
+          class="theme-button ${this.currentTheme === 'light' ? 'active' : ''}"
+          @click=${() => this.handleThemeChange('light')}
+          aria-label="Light theme"
+        >
+          ☀️
+        </button>
+        <button
+          class="theme-button ${this.currentTheme === 'auto' ? 'active' : ''}"
+          @click=${() => this.handleThemeChange('auto')}
+          aria-label="Auto theme (follow system)"
+        >
+          🖥️
+        </button>
+        <button
+          class="theme-button ${this.currentTheme === 'dark' ? 'active' : ''}"
+          @click=${() => this.handleThemeChange('dark')}
+          aria-label="Dark theme"
+        >
+          🌙
+        </button>
       </div>
     `;
   }
 }
 ```
 
-**Set theme from Jenkins**:
-```jelly
-<style>
-  :root {
-    --jenkins-primary: #1a73e8;
-    --jenkins-background: #f5f5f5;
-    --jenkins-text: #202124;
-  }
+**Key Points**:
+- ✅ Manages own state with `@state()`
+- ✅ Loads from localStorage on mount
+- ✅ Applies `data-theme` to `document.documentElement`
+- ✅ No props needed from parent (Separation of Concerns!)
+- ✅ Can be dropped anywhere without wiring
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --jenkins-background: #202124;
-      --jenkins-text: #e8eaed;
-    }
-  }
-</style>
+**Usage in any component**:
+```typescript
+// Header.ts - Just include it, no props needed!
+render() {
+  return html`
+    <header>
+      <nav>
+        <div class="logo">My App</div>
+        <swc-theme-toggle></swc-theme-toggle>
+      </nav>
+    </header>
+  `;
+}
 ```
+
+##### Benefits of This Complete System
+
+1. **Single Source of Truth**: All colors defined once in `tailwind.config.js`
+2. **Dogfooding**: Uses Tailwind's `theme()` function in your own CSS
+3. **Type Safety**: Tailwind validates colors at build time
+4. **No Duplication**: Never repeat hex values or theme definitions
+5. **Separation of Concerns**: ThemeToggle owns all theme logic
+6. **Automatic Updates**: Change `data-theme`, entire app updates instantly
+7. **Semantic Names**: Clear intent with meaningful color names
+8. **Auto Fallback**: Respects system preference in auto mode
+9. **Persistent**: Remembers user choice via localStorage
+10. **Clean Components**: Components stay focused on layout, not theming
+11. **Maintainable**: Change color once, updates everywhere
+12. **Scalable**: Easy to add new colors or themes
+
+##### Available Global CSS Variables
+
+**Surface Colors (Backgrounds)**:
+- `--surface-primary`: Main backgrounds
+- `--surface-secondary`: Secondary backgrounds
+- `--surface-tertiary`: Tertiary backgrounds
+- `--surface-accent`: Accent/highlight backgrounds
+
+**Text Colors**:
+- `--text-primary`: Main body text
+- `--text-secondary`: Secondary text
+- `--text-tertiary`: Tertiary/muted text
+- `--text-accent`: Accent/link text
+- `--text-inverse`: Inverse text (on primary buttons)
+
+**Border Colors**:
+- `--border-subtle`: Subtle borders
+- `--border-default`: Default borders
+- `--border-emphasis`: Emphasized borders
+
+**Action Colors (Buttons, Links)**:
+- `--action-primary`: Primary actions
+- `--action-primary-hover`: Primary action hover
+- `--action-secondary`: Secondary actions
+- `--action-secondary-hover`: Secondary action hover
+
+**Status Colors**:
+- `--status-success`: Success states
+- `--status-warning`: Warning states
+- `--status-error`: Error states
+- `--status-info`: Info states
+
+**Shadows**:
+- `--shadow-sm`: Small shadow
+- `--shadow-md`: Medium shadow
+- `--shadow-lg`: Large shadow
+- `--shadow-xl`: Extra large shadow
+
+**Gradients**:
+- `--gradient-hero`: Hero section gradient
+- `--gradient-accent`: Accent gradient
+
+##### Legacy Approach (Don't Use)
+
+**OLD WAY** (Per-Component Theme):
+```css
+/* ❌ Each component defines its own theme */
+:host {
+  --component-bg: theme('colors.white');
+  --component-text: theme('colors.gray.900');
+}
+@media (prefers-color-scheme: dark) {
+  :host {
+    --component-bg: theme('colors.gray.800');
+    --component-text: theme('colors.gray.100');
+  }
+}
+```
+
+Problems:
+- ❌ Duplicated across 50+ components
+- ❌ Hard to maintain consistency
+- ❌ No runtime theme switching
+- ❌ Can't use manual toggle
+
+**NEW WAY** (Global Theme):
+```css
+/* ✅ Define once in ThemesVariables.css */
+:root { --surface-primary: theme('colors.light.surface-primary'); }
+[data-theme='dark'] { --surface-primary: theme('colors.dark.surface-primary'); }
+
+/* ✅ Components just use it */
+.card { background: var(--surface-primary); }
+```
+
+Benefits:
+- ✅ Define once, use everywhere
+- ✅ Runtime theme switching works
+- ✅ Manual toggle supported
+- ✅ Easy to maintain
 
 #### SVG Icons with currentColor
 
