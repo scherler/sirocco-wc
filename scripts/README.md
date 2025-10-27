@@ -10,10 +10,38 @@ This script automates the entire publishing workflow:
 
 1. **Pre-flight checks**: Verifies git status and branch
 2. **Version selection**: Interactive prompt for version type (patch/minor/major)
-3. **Version bump**: Updates package.json and creates git commit
-4. **Git operations**: Pushes changes and tags to GitHub
-5. **GitHub release**: Creates release (if `gh` CLI is installed) or provides manual instructions
-6. **Automated publishing**: GitHub Actions workflow automatically publishes to npm
+3. **Release notes generation**: Auto-generates draft from git commits (can be customized)
+4. **Version bump**: Updates package.json and creates git commit
+5. **Git operations**: Pushes changes and tags to GitHub
+6. **GitHub release**: Creates release (if `gh` CLI is installed) or provides manual instructions
+7. **Automated publishing**: GitHub Actions workflow automatically publishes to npm
+
+### Release Notes Feature
+
+The script automatically generates release notes by analyzing commits since the last version:
+
+- **Categorizes commits** by type (Features, Bug Fixes, Documentation, Other)
+- **Follows conventional commits** format (feat:, fix:, docs:)
+- **Provides a draft** that you can accept (press Enter), edit, or replace
+- **Smart defaults** if no commits are found
+
+Example generated draft:
+```
+Release 1.2.0
+
+## ✨ Features
+
+- Add automated publishing helper script
+- New component theming system
+
+## 🐛 Bug Fixes
+
+- Fix build issues with Parcel
+
+## 📚 Documentation
+
+- Add comprehensive theming documentation
+```
 
 ### Usage
 
