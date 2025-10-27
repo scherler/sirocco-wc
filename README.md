@@ -35,6 +35,23 @@ npm i -g sirocco-wc
 
 You should install the tool globally so you can use it to generate node based projects with the `init` command.
 
+## Publishing (for maintainers)
+
+To publish a new version of sirocco-wc:
+
+```bash
+yarn publish:release
+```
+
+This runs an interactive script that:
+
+1. Checks git status and current version
+2. Prompts for version type (patch/minor/major)
+3. Automatically bumps version, commits, and pushes
+4. Creates GitHub release (triggers automated npm publishing)
+
+For more details, see [scripts/README.md](./scripts/README.md).
+
 ## Customize
 
 You can set different environments variable to change the default configuration of this tool, which you can find in `bin/config.js`:
@@ -48,12 +65,14 @@ const cssDir = process.env.SWC_CSS || `${srcDir}\/\*\*\/\*.css`
 ```
 
 ## Commands available
+
 ### Version
 
 ```bash
 sirocco-wc --version
 ```
-### help 
+
+### help
 
 ```bash
 sirocco-wc help
