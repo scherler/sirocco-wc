@@ -1,5 +1,13 @@
 #!/usr/bin/env node
 
+// Suppress experimental warning from prompt module
+process.removeAllListeners('warning');
+process.on('warning', (warning) => {
+  if (!warning.message.includes('ExperimentalWarning')) {
+    console.warn(warning);
+  }
+});
+
 /**
  * Publishing helper script for sirocco-wc
  * Automates version bumping, git operations, and GitHub release creation
@@ -101,23 +109,127 @@ async function promptVersionType(currentVersion) {
   return result;
 }
 
-async function promptReleaseNotes() {
-  log('\n📝 Enter release notes (press Enter twice to finish):', colors.blue);
-  log('Tip: Describe what changed in this version\n', colors.yellow);
+function generateReleaseNotesDraft(currentVersion, newVersion) {
+  try {
+    // Get commits since last tag
+    let commits;
+    try {
+      commits = execSync(`git log v${currentVersion}..HEAD --oneline --no-merges --pretty=format:"%s"`,
+        { encoding: 'utf-8' }).trim();
+    } catch {
+      // If tag doesn't exist, get recent commits
+      commits = execSync('git log --oneline --no-merges -10 --pretty=format:"%s"',
+        { encoding: 'utf-8' }).trim();
+    }
+
+    if (!commits) {
+      return `Release ${newVersion}
+
+Updates and improvements.`;
+    }
+
+    const commitLines = commits.split('\n').filter(line => line.trim());
+
+    // Categorize commits
+    const features = [];
+    const fixes = [];
+    const docs = [];
+    const other = [];
+
+    commitLines.forEach(commit => {
+      const lower = commit.toLowerCase();
+      if (lower.startsWith('feat:') || lower.startsWith('feature:')) {
+        features.push(commit.replace(/^feat(ure)?:\s*/i, ''));
+      } else if (lower.startsWith('fix:')) {
+        fixes.push(commit.replace(/^fix:\s*/i, ''));
+      } else if (lower.startsWith('docs:') || lower.startsWith('doc:')) {
+        docs.push(commit.replace(/^docs?:\s*/i, ''));
+      } else {
+        other.push(commit);
+      }
+    });
+
+    let draft = `Release ${newVersion}\n\n`;
+
+    if (features.length > 0) {
+      draft += '## ✨ Features\n\n';
+      features.forEach(f => draft += `- ${f}\n`);
+      draft += '\n';
+    }
+
+    if (fixes.length > 0) {
+      draft += '## 🐛 Bug Fixes\n\n';
+      fixes.forEach(f => draft += `- ${f}\n`);
+      draft += '\n';
+    }
+
+    if (docs.length > 0) {
+      draft += '## 📚 Documentation\n\n';
+      docs.forEach(d => draft += `- ${d}\n`);
+      draft += '\n';
+    }
+
+    if (other.length > 0) {
+      draft += '## 🔧 Other Changes\n\n';
+      other.forEach(o => draft += `- ${o}\n`);
+      draft += '\n';
+    }
+
+    return draft.trim();
+  } catch (error) {
+    return `Release ${newVersion}
+
+Updates and improvements.`;
+  }
+}
+
+async function promptReleaseNotes(currentVersion, newVersion) {
+  const draft = generateReleaseNotesDraft(currentVersion, newVersion);
+
+  log('\n📝 Generated release notes draft:', colors.blue);
+  log('━'.repeat(60), colors.bright);
+  console.log(draft);
+  log('━'.repeat(60), colors.bright);
+
+  log('\nOptions:', colors.yellow);
+  log('  1. Press Enter to use the draft above', colors.yellow);
+  log('  2. Type your own release notes', colors.yellow);
+  log('  3. Type "edit" to modify the draft\n', colors.yellow);
 
   const schema = {
     properties: {
       notes: {
-        description: 'Release notes',
+        description: 'Release notes (press Enter to use draft)',
         type: 'string',
-        required: true,
-        message: 'Release notes are required',
+        required: false,
+        default: draft,
       },
     },
   };
 
+  prompt.message = '';
+  prompt.delimiter = '';
+
   const result = await prompt.get(schema);
-  return result.notes;
+  const userNotes = result.notes || draft;
+
+  if (userNotes.toLowerCase() === 'edit') {
+    log('\n✏️  Enter your custom release notes:', colors.blue);
+    const editSchema = {
+      properties: {
+        notes: {
+          description: 'Custom release notes',
+          type: 'string',
+          required: true,
+          message: 'Release notes are required',
+        },
+      },
+    };
+    const editResult = await prompt.get(editSchema);
+    return editResult.notes;
+  }
+
+  return userNotes;
 }
 
 function checkGhCli() {
@@ -173,7 +285,7 @@ async function main() {
     }
 
     // Get release notes
-    const releaseNotes = await promptReleaseNotes();
+    const releaseNotes = await promptReleaseNotes(currentVersion, newVersion);
 
     // Execute version bump
     log('\n📝 Updating version...', colors.blue);
