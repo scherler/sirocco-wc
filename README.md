@@ -9,9 +9,23 @@ This tool helps you to develop with
 
 ## Why the name?
 
-I was looking for a word that unifies tailwind with lit. A Mediterranean wind that comes from the Sahara and reaches hurricane speeds in North Africa and Southern Europe, is the definition of sirocco and since I wrote it based in Sevilla, I found it fitting. 😁 
+I was looking for a word that unifies tailwind with lit. A Mediterranean wind that comes from the Sahara and reaches hurricane speeds in North Africa and Southern Europe, is the definition of sirocco and since I wrote it based in Sevilla, I found it fitting. 😁
 
 ![Sirocco wind](sirocco.jpg "Sirocco wind")
+
+## Claude Code Support
+
+This project includes comprehensive Claude Code support with expert personalities that understand sirocco-wc architecture, Lit web components, Tailwind CSS integration, and Jenkins plugin development patterns.
+
+For AI-assisted development:
+- See [CLAUDE.md](./CLAUDE.md) for project guidance and architecture details
+- Explore `.clauderc-personalities/` for specialized expert personalities including:
+  - **sirocco-webcomponent-expert**: Complete mastery of Lit + Tailwind + Sirocco patterns, global theming system
+  - **sirocco-integration-expert**: Jenkins plugin integration and build system expertise
+  - **sirocco-dependency-expert**: Dependency management, package updates, Yarn Berry setup
+  - **sirocco-testing-expert**: Playwright E2E, Jest unit testing, Shadow DOM testing strategies
+
+These personalities provide proven patterns, best practices, and detailed implementation guidance for working with sirocco-wc projects.
 
 ## Install
 

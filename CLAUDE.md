@@ -2,6 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Expert Personalities Available
+
+This project includes specialized Claude Code personalities in `.clauderc-personalities/` that provide deep expertise:
+
+- **sirocco-webcomponent-expert.md**: Complete mastery of sirocco-wc, Lit web components, Tailwind CSS integration, Shadow DOM, component patterns, the global theming system, and best practices. Use this personality for component development, styling, and architectural decisions.
+
+- **sirocco-integration-expert.md**: Expertise in Jenkins plugin integration, Maven build configuration, frontend-maven-plugin setup, and deployment strategies. Use this personality for build system and integration work.
+
+- **sirocco-dependency-expert.md**: Specialized knowledge of dependency management, package updates, vulnerability remediation, and maintaining the Yarn Berry (PnP) setup.
+
+- **sirocco-testing-expert.md**: Deep understanding of Playwright E2E testing, Jest unit testing, Shadow DOM testing strategies, and test automation for web components.
+
+These personalities contain proven patterns, detailed implementation examples, and comprehensive best practices. Reference them when working on sirocco-wc projects to leverage accumulated expertise.
+
 ## Project Overview
 
 sirocco-wc is a CLI scaffolding tool that fuses Lit web components with Tailwind CSS. It provides zero-configuration development using Parcel, with integrated Playwright and Jest testing, specifically designed for Jenkins plugin development.
