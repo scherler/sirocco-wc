@@ -1,13 +1,5 @@
 #!/usr/bin/env node
 
-// Suppress experimental warning from prompt module
-process.removeAllListeners('warning');
-process.on('warning', (warning) => {
-  if (!warning.message.includes('ExperimentalWarning')) {
-    console.warn(warning);
-  }
-});
-
 /**
  * Publishing helper script for sirocco-wc
  * Automates version bumping, git operations, and GitHub release creation
