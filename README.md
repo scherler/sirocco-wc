@@ -37,18 +37,39 @@ You should install the tool globally so you can use it to generate node based pr
 
 ## Publishing (for maintainers)
 
-To publish a new version of sirocco-wc:
+sirocco-wc uses a **two-phase publishing workflow** for safety:
+
+### Phase 1: Publish Snapshot (Test Version)
 
 ```bash
-yarn publish:release
+yarn publish:snapshot
 ```
 
-This runs an interactive script that:
+This publishes a test version (e.g., `1.1.26-snap`) to npm with the `snapshot` tag.
 
-1. Checks git status and current version
-2. Prompts for version type (patch/minor/major)
-3. Automatically bumps version, commits, and pushes
-4. Creates GitHub release (triggers automated npm publishing)
+### Phase 2: Test the Snapshot
+
+Install and test the snapshot in a real project:
+
+```bash
+npm install -g sirocco-wc@snapshot
+# or
+npm install sirocco-wc@1.1.26-snap
+```
+
+Verify functionality, run tests, ensure nothing is broken.
+
+### Phase 3: Publish Final Release
+
+Once satisfied with testing:
+
+```bash
+yarn publish:finalize
+```
+
+This publishes the final version with git tags and GitHub release.
+
+**Why two phases?** This workflow ensures you can test the exact version that will be published before making it official, preventing broken releases.
 
 For more details, see [scripts/README.md](./scripts/README.md).
 

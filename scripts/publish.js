@@ -2,19 +2,21 @@
 
 /**
  * Publishing helper script for sirocco-wc
- * Automates version bumping, git operations, and GitHub release creation
+ * Two-phase publishing: snapshot first, then final release after testing
  */
 
 const { execSync } = require('child_process');
-const { readFileSync } = require('fs');
-const prompt = require('prompt');
+const { readFileSync, writeFileSync } = require('fs');
+const readline = require('readline');
 
 const colors = {
   reset: '\x1b[0m',
   bright: '\x1b[1m',
+  dim: '\x1b[2m',
   green: '\x1b[32m',
   yellow: '\x1b[33m',
   blue: '\x1b[34m',
+  cyan: '\x1b[36m',
   red: '\x1b[31m',
 };
 
@@ -22,14 +24,26 @@ function log(message, color = colors.reset) {
   console.log(`${color}${message}${colors.reset}`);
 }
 
-function execCommand(command, description) {
+function header(title) {
+  log('\n' + '═'.repeat(70), colors.bright);
+  log(`  ${title}`, colors.bright);
+  log('═'.repeat(70) + '\n', colors.bright);
+}
+
+function section(title) {
+  log(`\n▶ ${title}`, colors.cyan);
+  log('─'.repeat(70), colors.dim);
+}
+
+function execCommand(command, description, silent = false) {
   try {
-    log(`\n${description}...`, colors.blue);
-    const result = execSync(command, { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] });
-    log(`✓ ${description} completed`, colors.green);
+    if (!silent) log(`  ${description}...`, colors.blue);
+    const result = execSync(command, { encoding: 'utf-8', stdio: silent ? ['pipe', 'pipe', 'pipe'] : ['pipe', 'pipe', 'inherit'] });
+    if (!silent) log(`  ✓ ${description}`, colors.green);
     return result.trim();
   } catch (error) {
-    log(`✗ Error: ${error.message}`, colors.red);
+    log(`  ✗ ${description} failed`, colors.red);
+    if (!silent) console.error(error.stderr || error.message);
     throw error;
   }
 }
@@ -39,12 +53,19 @@ function getCurrentVersion() {
   return packageJson.version;
 }
 
+function updatePackageVersion(version) {
+  const packagePath = './package.json';
+  const packageJson = JSON.parse(readFileSync(packagePath, 'utf-8'));
+  packageJson.version = version;
+  writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + '\n');
+}
+
 function checkGitStatus() {
   const status = execSync('git status --porcelain', { encoding: 'utf-8' });
   if (status.trim()) {
-    log('\n⚠ Warning: You have uncommitted changes:', colors.yellow);
+    log('⚠ Warning: You have uncommitted changes:', colors.yellow);
     console.log(status);
-    log('Please commit or stash your changes before publishing.', colors.yellow);
+    log('\nPlease commit or stash your changes before publishing.', colors.yellow);
     process.exit(1);
   }
 }
@@ -52,13 +73,14 @@ function checkGitStatus() {
 function checkGitBranch() {
   const branch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
   if (branch !== 'main') {
-    log(`\n⚠ Warning: You are on branch '${branch}', not 'main'`, colors.yellow);
+    log(`⚠ Warning: You are on branch '${branch}', not 'main'`, colors.yellow);
   }
   return branch;
 }
 
 function calculateNewVersion(current, type) {
-  const [major, minor, patch] = current.split('.').map(Number);
+  const parts = current.replace(/-snap$/, '').split('.');
+  const [major, minor, patch] = parts.map(Number);
 
   switch (type) {
     case 'major':
@@ -72,57 +94,28 @@ function calculateNewVersion(current, type) {
   }
 }
 
-async function promptVersionType(currentVersion) {
-  log(`\n${colors.bright}Current version: ${currentVersion}${colors.reset}`, colors.bright);
-  log('\nVersion bump options:');
-  log(`  patch: ${calculateNewVersion(currentVersion, 'patch')} (bug fixes)`, colors.blue);
-  log(`  minor: ${calculateNewVersion(currentVersion, 'minor')} (new features, backward compatible)`, colors.blue);
-  log(`  major: ${calculateNewVersion(currentVersion, 'major')} (breaking changes)`, colors.blue);
-  log(`  cancel: Exit without publishing`, colors.yellow);
-
-  const schema = {
-    properties: {
-      type: {
-        description: 'Select version type',
-        type: 'string',
-        pattern: /^(patch|minor|major|cancel)$/,
-        message: 'Must be patch, minor, major, or cancel',
-        required: true,
-        default: 'patch',
-      },
-    },
-  };
-
-  prompt.start();
-  prompt.message = '';
-  prompt.delimiter = '';
-
-  const result = await prompt.get(schema);
-  return result;
-}
-
-function generateReleaseNotesDraft(currentVersion, newVersion) {
+function generateReleaseNotes(currentVersion, newVersion) {
   try {
-    // Get commits since last tag
     let commits;
     try {
-      commits = execSync(`git log v${currentVersion}..HEAD --oneline --no-merges --pretty=format:"%s"`,
-        { encoding: 'utf-8' }).trim();
+      // Try to get commits since last version tag
+      commits = execSync(
+        `git log v${currentVersion}..HEAD --oneline --no-merges --pretty=format:"%s"`,
+        { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'ignore'] }
+      ).trim();
     } catch {
-      // If tag doesn't exist, get recent commits
-      commits = execSync('git log --oneline --no-merges -10 --pretty=format:"%s"',
-        { encoding: 'utf-8' }).trim();
+      // Fallback to recent commits
+      commits = execSync(
+        'git log --oneline --no-merges -10 --pretty=format:"%s"',
+        { encoding: 'utf-8' }
+      ).trim();
     }
 
     if (!commits) {
-      return `Release ${newVersion}
-
-Updates and improvements.`;
+      return `## Release ${newVersion}\n\nUpdates and improvements.`;
     }
 
     const commitLines = commits.split('\n').filter(line => line.trim());
-
-    // Categorize commits
     const features = [];
     const fixes = [];
     const docs = [];
@@ -141,87 +134,68 @@ Updates and improvements.`;
       }
     });
 
-    let draft = `Release ${newVersion}\n\n`;
+    let notes = `## Release ${newVersion}\n\n`;
 
     if (features.length > 0) {
-      draft += '## ✨ Features\n\n';
-      features.forEach(f => draft += `- ${f}\n`);
-      draft += '\n';
+      notes += '### ✨ New Features\n\n';
+      features.forEach(f => notes += `- ${f}\n`);
+      notes += '\n';
     }
 
     if (fixes.length > 0) {
-      draft += '## 🐛 Bug Fixes\n\n';
-      fixes.forEach(f => draft += `- ${f}\n`);
-      draft += '\n';
+      notes += '### 🐛 Bug Fixes\n\n';
+      fixes.forEach(f => notes += `- ${f}\n`);
+      notes += '\n';
     }
 
     if (docs.length > 0) {
-      draft += '## 📚 Documentation\n\n';
-      docs.forEach(d => draft += `- ${d}\n`);
-      draft += '\n';
+      notes += '### 📚 Documentation\n\n';
+      docs.forEach(d => notes += `- ${d}\n`);
+      notes += '\n';
     }
 
-    if (other.length > 0) {
-      draft += '## 🔧 Other Changes\n\n';
-      other.forEach(o => draft += `- ${o}\n`);
-      draft += '\n';
+    if (other.length > 0 && (features.length === 0 && fixes.length === 0)) {
+      notes += '### Changes\n\n';
+      other.slice(0, 5).forEach(o => notes += `- ${o}\n`);
     }
 
-    return draft.trim();
-  } catch (error) {
-    return `Release ${newVersion}
-
-Updates and improvements.`;
+    return notes.trim();
+  } catch {
+    return `## Release ${newVersion}\n\nUpdates and improvements.`;
   }
 }
 
-async function promptReleaseNotes(currentVersion, newVersion) {
-  const draft = generateReleaseNotesDraft(currentVersion, newVersion);
+async function prompt(question, defaultValue = '') {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
 
-  log('\n📝 Generated release notes draft:', colors.blue);
-  log('━'.repeat(60), colors.bright);
-  console.log(draft);
-  log('━'.repeat(60), colors.bright);
+  return new Promise((resolve) => {
+    const displayDefault = defaultValue ? ` (${defaultValue})` : '';
+    rl.question(`${question}${displayDefault}: `, (answer) => {
+      rl.close();
+      resolve(answer.trim() || defaultValue);
+    });
+  });
+}
 
-  log('\nOptions:', colors.yellow);
-  log('  1. Press Enter to use the draft above', colors.yellow);
-  log('  2. Type your own release notes', colors.yellow);
-  log('  3. Type "edit" to modify the draft\n', colors.yellow);
+async function confirm(question, defaultYes = false) {
+  const defaultText = defaultYes ? 'Y/n' : 'y/N';
+  const answer = await prompt(`${question} (${defaultText})`);
+  const normalized = answer.toLowerCase();
 
-  const schema = {
-    properties: {
-      notes: {
-        description: 'Release notes (press Enter to use draft)',
-        type: 'string',
-        required: false,
-        default: draft,
-      },
-    },
-  };
+  if (!normalized) return defaultYes;
+  return normalized === 'y' || normalized === 'yes';
+}
 
-  prompt.message = '';
-  prompt.delimiter = '';
-
-  const result = await prompt.get(schema);
-  const userNotes = result.notes || draft;
-
-  if (userNotes.toLowerCase() === 'edit') {
-    log('\n✏️  Enter your custom release notes:', colors.blue);
-    const editSchema = {
-      properties: {
-        notes: {
-          description: 'Custom release notes',
-          type: 'string',
-          required: true,
-          message: 'Release notes are required',
-        },
-      },
-    };
-    const editResult = await prompt.get(editSchema);
-    return editResult.notes;
+function checkNpmAuth() {
+  try {
+    execSync('npm whoami', { stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
   }
-
-  return userNotes;
 }
 
 function checkGhCli() {
@@ -233,101 +207,242 @@ function checkGhCli() {
   }
 }
 
-async function main() {
+async function publishSnapshot() {
+  header('📦 Snapshot Publishing - Phase 1');
+
+  // Pre-flight checks
+  section('Pre-flight checks');
+  checkGitStatus();
+  const branch = checkGitBranch();
+  const currentVersion = getCurrentVersion();
+
+  if (currentVersion.endsWith('-snap')) {
+    log('  ⚠ Current version already is a snapshot', colors.yellow);
+    const proceed = await confirm('  Continue anyway?', false);
+    if (!proceed) {
+      log('\n✗ Cancelled', colors.yellow);
+      process.exit(0);
+    }
+  }
+
+  // Version selection
+  section('Version selection');
+  log(`  Current version: ${currentVersion}`, colors.bright);
+  log(`\n  Available bump types:`);
+  log(`    1) patch → ${calculateNewVersion(currentVersion, 'patch')}-snap`, colors.dim);
+  log(`    2) minor → ${calculateNewVersion(currentVersion, 'minor')}-snap`, colors.dim);
+  log(`    3) major → ${calculateNewVersion(currentVersion, 'major')}-snap`, colors.dim);
+
+  const versionType = await prompt('\n  Select version type [patch/minor/major]', 'patch');
+
+  if (!['patch', 'minor', 'major'].includes(versionType)) {
+    log('\n✗ Invalid version type', colors.red);
+    process.exit(1);
+  }
+
+  const newVersion = calculateNewVersion(currentVersion, versionType);
+  const snapshotVersion = `${newVersion}-snap`;
+
+  log(`\n  📸 Snapshot version: ${snapshotVersion}`, colors.cyan);
+
+  const confirmPublish = await confirm('\n  Proceed with snapshot publishing?', false);
+  if (!confirmPublish) {
+    log('\n✗ Cancelled', colors.yellow);
+    process.exit(0);
+  }
+
+  // Check npm authentication
+  section('NPM authentication');
+  if (!checkNpmAuth()) {
+    log('  ✗ Not logged in to npm', colors.red);
+    log('  Run: npm login', colors.yellow);
+    process.exit(1);
+  }
+  log('  ✓ Authenticated', colors.green);
+
+  // Update version in package.json
+  section('Version update');
+  updatePackageVersion(snapshotVersion);
+  log(`  ✓ Updated package.json to ${snapshotVersion}`, colors.green);
+
+  // Publish to npm with snapshot tag
+  section('Publishing to npm');
   try {
-    log(`\n${'='.repeat(60)}`, colors.bright);
-    log('sirocco-wc Publishing Helper', colors.bright);
-    log(`${'='.repeat(60)}\n`, colors.bright);
-
-    // Pre-flight checks
-    checkGitStatus();
-    const branch = checkGitBranch();
-    const currentVersion = getCurrentVersion();
-
-    // Get version type from user
-    const versionChoice = await promptVersionType(currentVersion);
-
-    if (versionChoice.type === 'cancel') {
-      log('\n✗ Publishing cancelled', colors.yellow);
-      process.exit(0);
-    }
-
-    const newVersion = calculateNewVersion(currentVersion, versionChoice.type);
-
-    log(`\n📦 Preparing to publish version ${newVersion}`, colors.bright);
-
-    // Confirm before proceeding
-    const confirmSchema = {
-      properties: {
-        confirm: {
-          description: `Proceed with ${versionChoice.type} release (${currentVersion} → ${newVersion})? (yes/no)`,
-          type: 'string',
-          pattern: /^(yes|no|y|n)$/i,
-          message: 'Please answer yes or no',
-          required: true,
-          default: 'no',
-        },
-      },
-    };
-
-    const confirmation = await prompt.get(confirmSchema);
-    if (confirmation.confirm.toLowerCase().startsWith('n')) {
-      log('\n✗ Publishing cancelled', colors.yellow);
-      process.exit(0);
-    }
-
-    // Get release notes
-    const releaseNotes = await promptReleaseNotes(currentVersion, newVersion);
-
-    // Execute version bump
-    log('\n📝 Updating version...', colors.blue);
-    execCommand(`npm version ${versionChoice.type} -m "Bump version to %s"`, 'Version bump');
-
-    // Push changes
-    execCommand(`git push origin ${branch}`, 'Push commit');
-    execCommand('git push origin --tags', 'Push tags');
-
-    const tag = `v${newVersion}`;
-    log(`\n✓ Version ${newVersion} committed and pushed with tag ${tag}`, colors.green);
-
-    // Try to create GitHub release using gh CLI
-    const hasGhCli = checkGhCli();
-
-    if (hasGhCli) {
-      log('\n🚀 Creating GitHub release...', colors.blue);
-      try {
-        execCommand(
-          `gh release create ${tag} --title "Release ${newVersion}" --notes "${releaseNotes}"`,
-          'Create GitHub release'
-        );
-        log('\n✓ GitHub release created successfully!', colors.green);
-        log('📦 GitHub Actions will automatically publish to npm', colors.blue);
-      } catch (error) {
-        log('\n⚠ Could not create GitHub release automatically', colors.yellow);
-        log('Please create it manually:', colors.yellow);
-        log(`  https://github.com/scherler/sirocco-wc/releases/new?tag=${tag}`, colors.blue);
-      }
-    } else {
-      log('\n⚠ GitHub CLI (gh) not installed', colors.yellow);
-      log('Please create the GitHub release manually:', colors.yellow);
-      log(`  1. Go to: https://github.com/scherler/sirocco-wc/releases/new?tag=${tag}`, colors.blue);
-      log(`  2. Select tag: ${tag}`, colors.blue);
-      log(`  3. Add release notes and publish`, colors.blue);
-      log('\n💡 Tip: Install GitHub CLI with: npm install -g gh', colors.yellow);
-    }
-
-    log('\n' + '='.repeat(60), colors.bright);
-    log('✓ Publishing process completed!', colors.green);
-    log('='.repeat(60) + '\n', colors.bright);
-
+    execCommand('npm publish --tag snapshot', 'Publishing snapshot');
   } catch (error) {
-    log(`\n✗ Publishing failed: ${error.message}`, colors.red);
+    // Restore version on failure
+    updatePackageVersion(currentVersion);
+    log('  ✗ Publishing failed, version restored', colors.red);
+    process.exit(1);
+  }
+
+  // Restore version (snapshot published but not committed)
+  updatePackageVersion(currentVersion);
+  log(`  ✓ Restored package.json to ${currentVersion}`, colors.green);
+
+  // Success instructions
+  header('✅ Snapshot Published Successfully!');
+
+  log('Next steps:', colors.bright);
+  log('');
+  log('1. Test the snapshot in a project:', colors.cyan);
+  log(`   npm install -g sirocco-wc@snapshot`, colors.dim);
+  log(`   # or`);
+  log(`   npm install --save-dev sirocco-wc@${snapshotVersion}`, colors.dim);
+  log('');
+  log('2. Verify functionality:', colors.cyan);
+  log('   - Run your tests', colors.dim);
+  log('   - Check core functionality', colors.dim);
+  log('   - Ensure nothing is broken', colors.dim);
+  log('');
+  log('3. When satisfied, publish final release:', colors.cyan);
+  log('   yarn publish:finalize', colors.dim);
+  log('');
+  log('4. Or if issues found:', colors.cyan);
+  log('   - Fix the issues', colors.dim);
+  log('   - Commit fixes', colors.dim);
+  log('   - Republish snapshot: yarn publish:snapshot', colors.dim);
+  log('');
+}
+
+async function publishFinal() {
+  header('🚀 Final Release Publishing - Phase 2');
+
+  // Pre-flight checks
+  section('Pre-flight checks');
+  checkGitStatus();
+  const branch = checkGitBranch();
+  const currentVersion = getCurrentVersion();
+
+  // Check if snapshot exists
+  section('Snapshot verification');
+  const baseVersion = currentVersion.replace(/-snap$/, '');
+  let snapshotVersion;
+
+  try {
+    const npmView = execSync(`npm view sirocco-wc@snapshot version`, { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+    snapshotVersion = npmView;
+
+    if (snapshotVersion && snapshotVersion.startsWith(baseVersion)) {
+      log(`  ✓ Found snapshot: ${snapshotVersion}`, colors.green);
+    } else {
+      log(`  ⚠ No matching snapshot found (found: ${snapshotVersion || 'none'})`, colors.yellow);
+      const proceed = await confirm('  Continue anyway?', false);
+      if (!proceed) {
+        log('\n✗ Cancelled', colors.yellow);
+        log('\n  Tip: Run "yarn publish:snapshot" first', colors.dim);
+        process.exit(0);
+      }
+    }
+  } catch {
+    log('  ⚠ No snapshot found on npm', colors.yellow);
+    const proceed = await confirm('  Continue without testing a snapshot?', false);
+    if (!proceed) {
+      log('\n✗ Cancelled', colors.yellow);
+      log('\n  Tip: Run "yarn publish:snapshot" first', colors.dim);
+      process.exit(0);
+    }
+  }
+
+  // Determine version
+  const versionMatch = snapshotVersion ? snapshotVersion.match(/^(\d+\.\d+\.\d+)-snap$/) : null;
+  const newVersion = versionMatch ? versionMatch[1] : baseVersion;
+
+  section('Final version');
+  log(`  Current: ${currentVersion}`, colors.dim);
+  log(`  Release: ${newVersion}`, colors.bright);
+
+  const confirmRelease = await confirm('\n  Proceed with final release?', false);
+  if (!confirmRelease) {
+    log('\n✗ Cancelled', colors.yellow);
+    process.exit(0);
+  }
+
+  // Generate release notes
+  section('Release notes');
+  const releaseNotes = generateReleaseNotes(currentVersion, newVersion);
+  log('');
+  log(releaseNotes, colors.dim);
+  log('');
+
+  const notesOk = await confirm('  Use these release notes?', true);
+  let finalNotes = releaseNotes;
+
+  if (!notesOk) {
+    log('\n  Enter custom release notes (Ctrl+D when done):', colors.cyan);
+    const lines = [];
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+
+    for await (const line of rl) {
+      lines.push(line);
+    }
+
+    finalNotes = lines.join('\n');
+    if (!finalNotes.trim()) {
+      log('  ✗ Release notes cannot be empty', colors.red);
+      process.exit(1);
+    }
+  }
+
+  // Version bump and commit
+  section('Git operations');
+  execCommand(`npm version ${newVersion} -m "Release v${newVersion}"`, 'Version bump');
+  execCommand(`git push origin ${branch}`, 'Push commit');
+  execCommand('git push origin --tags', 'Push tags');
+
+  // Publish to npm
+  section('Publishing to npm');
+  execCommand('npm publish', 'Publishing release');
+
+  // Create GitHub release
+  section('GitHub release');
+  if (checkGhCli()) {
+    try {
+      const tag = `v${newVersion}`;
+      // Write release notes to temp file to handle multiline
+      const tempFile = '/tmp/release-notes.txt';
+      writeFileSync(tempFile, finalNotes);
+      execCommand(
+        `gh release create ${tag} --title "Release ${newVersion}" --notes-file ${tempFile}`,
+        'Creating GitHub release'
+      );
+    } catch (error) {
+      log('  ⚠ Could not create GitHub release automatically', colors.yellow);
+      log(`  Create manually: https://github.com/scherler/sirocco-wc/releases/new?tag=v${newVersion}`, colors.blue);
+    }
+  } else {
+    log('  ⚠ GitHub CLI not installed', colors.yellow);
+    log(`  Create release manually: https://github.com/scherler/sirocco-wc/releases/new?tag=v${newVersion}`, colors.blue);
+  }
+
+  // Success
+  header('✅ Release Published Successfully!');
+  log(`Version ${newVersion} is now live on npm.`, colors.green);
+  log('');
+}
+
+// Main
+async function main() {
+  const args = process.argv.slice(2);
+  const mode = args[0];
+
+  if (mode === 'snapshot' || mode === '--snapshot' || mode === '-s') {
+    await publishSnapshot();
+  } else if (mode === 'final' || mode === 'finalize' || mode === '--final' || mode === '-f') {
+    await publishFinal();
+  } else {
+    log('Usage:', colors.bright);
+    log('  yarn publish:snapshot  - Publish test version (with -snap suffix)', colors.dim);
+    log('  yarn publish:finalize  - Publish final release after testing', colors.dim);
+    log('');
+    log('Workflow:', colors.cyan);
+    log('  1. yarn publish:snapshot  → Test the snapshot', colors.dim);
+    log('  2. yarn publish:finalize  → Publish final version', colors.dim);
     process.exit(1);
   }
 }
 
-// Run the script
 main().catch((error) => {
-  log(`\n✗ Unexpected error: ${error.message}`, colors.red);
+  log(`\n✗ Error: ${error.message}`, colors.red);
   process.exit(1);
 });

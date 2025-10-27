@@ -58,7 +58,8 @@
   },
   "packageManager": "yarn@4.10.3",
   "scripts": {
-    "publish:release": "node scripts/publish.js"
+    "publish:snapshot": "node scripts/publish.js snapshot",
+    "publish:finalize": "node scripts/publish.js finalize"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.6"

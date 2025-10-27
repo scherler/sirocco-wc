@@ -1,67 +1,247 @@
 # Publishing Scripts
 
-## publish.js
+## Two-Phase Publishing Workflow
 
-Automated Node.js helper script for publishing new versions of sirocco-wc.
+sirocco-wc uses a safe two-phase publishing workflow to prevent broken releases:
 
-### What it does
+1. **Snapshot** - Publish test version with `-snap` suffix
+2. **Test** - Verify the snapshot works in real projects
+3. **Finalize** - Publish the official release
 
-This script automates the entire publishing workflow:
+This ensures the exact version that will be published is tested first.
 
-1. **Pre-flight checks**: Verifies git status and branch
-2. **Version selection**: Interactive prompt for version type (patch/minor/major)
-3. **Release notes generation**: Auto-generates draft from git commits (can be customized)
-4. **Version bump**: Updates package.json and creates git commit
-5. **Git operations**: Pushes changes and tags to GitHub
-6. **GitHub release**: Creates release (if `gh` CLI is installed) or provides manual instructions
-7. **Automated publishing**: GitHub Actions workflow automatically publishes to npm
+## Phase 1: Publish Snapshot
 
-### Release Notes Feature
-
-The script automatically generates release notes by analyzing commits since the last version:
-
-- **Categorizes commits** by type (Features, Bug Fixes, Documentation, Other)
-- **Follows conventional commits** format (feat:, fix:, docs:)
-- **Provides a draft** that you can accept (press Enter), edit, or replace
-- **Smart defaults** if no commits are found
-
-Example generated draft:
+```bash
+yarn publish:snapshot
 ```
-Release 1.2.0
 
-## ✨ Features
+### What it does:
+
+1. Checks git status (must be clean)
+2. Prompts for version bump type (patch/minor/major)
+3. Calculates snapshot version (e.g., `1.1.25` → `1.1.26-snap`)
+4. Verifies npm authentication
+5. Temporarily updates `package.json` to snapshot version
+6. Publishes to npm with `snapshot` tag
+7. Restores `package.json` to original version
+8. Displays testing instructions
+
+### Key features:
+
+- **No git commits** - Snapshot doesn't modify your repository
+- **Safe rollback** - If publishing fails, `package.json` is automatically restored
+- **Isolated tag** - Published with `snapshot` tag, won't affect `latest`
+
+### Example output:
+
+```
+══════════════════════════════════════════════════════════════════
+  📦 Snapshot Publishing - Phase 1
+══════════════════════════════════════════════════════════════════
+
+▶ Pre-flight checks
+──────────────────────────────────────────────────────────────────
+  ✓ Git status clean
+  ✓ On branch main
+
+▶ Version selection
+──────────────────────────────────────────────────────────────────
+  Current version: 1.1.25
+
+  Available bump types:
+    1) patch → 1.1.26-snap
+    2) minor → 1.2.0-snap
+    3) major → 2.0.0-snap
+
+  Select version type [patch/minor/major] (patch): patch
+  📸 Snapshot version: 1.1.26-snap
+
+  Proceed with snapshot publishing? (y/N): y
+
+▶ NPM authentication
+──────────────────────────────────────────────────────────────────
+  ✓ Authenticated
+
+▶ Version update
+──────────────────────────────────────────────────────────────────
+  ✓ Updated package.json to 1.1.26-snap
+
+▶ Publishing to npm
+──────────────────────────────────────────────────────────────────
+  Publishing snapshot...
+  ✓ Publishing snapshot
+
+  ✓ Restored package.json to 1.1.25
+
+══════════════════════════════════════════════════════════════════
+  ✅ Snapshot Published Successfully!
+══════════════════════════════════════════════════════════════════
+
+Next steps:
+
+1. Test the snapshot in a project:
+   npm install -g sirocco-wc@snapshot
+   # or
+   npm install --save-dev sirocco-wc@1.1.26-snap
+
+2. Verify functionality:
+   - Run your tests
+   - Check core functionality
+   - Ensure nothing is broken
+
+3. When satisfied, publish final release:
+   yarn publish:finalize
+
+4. Or if issues found:
+   - Fix the issues
+   - Commit fixes
+   - Republish snapshot: yarn publish:snapshot
+```
+
+## Phase 2: Test the Snapshot
+
+After publishing the snapshot, test it thoroughly:
+
+### Global installation
+
+```bash
+npm install -g sirocco-wc@snapshot
+```
+
+### Project-specific installation
+
+```bash
+npm install sirocco-wc@1.1.26-snap
+# or
+npm install sirocco-wc@snapshot
+```
+
+### Testing checklist
+
+- ✅ Core commands work (`sirocco-wc init`, `sirocco-wc add`, etc.)
+- ✅ Component generation works correctly
+- ✅ CSS building and watching functions
+- ✅ No regressions in existing functionality
+- ✅ Run test suite if available
+
+### If issues are found
+
+1. Fix the issues in your codebase
+2. Commit the fixes
+3. Republish snapshot: `yarn publish:snapshot`
+4. Repeat testing
+
+## Phase 3: Publish Final Release
+
+Once testing is complete and you're satisfied:
+
+```bash
+yarn publish:finalize
+```
+
+### What it does:
+
+1. Checks git status (must be clean)
+2. Verifies a snapshot was published
+3. Shows the final version to be released
+4. Auto-generates release notes from git commits
+5. Allows customization of release notes
+6. Bumps version with `npm version` (creates git commit & tag)
+7. Pushes commit and tags to GitHub
+8. Publishes to npm (as `latest` tag)
+9. Creates GitHub release (if `gh` CLI is available)
+
+### Release notes generation
+
+The script automatically categorizes commits by type:
+
+- **✨ New Features** - Commits starting with `feat:` or `feature:`
+- **🐛 Bug Fixes** - Commits starting with `fix:`
+- **📚 Documentation** - Commits starting with `docs:` or `doc:`
+- **Changes** - Other commits
+
+You can accept the generated notes or write custom ones.
+
+### Example output:
+
+```
+══════════════════════════════════════════════════════════════════
+  🚀 Final Release Publishing - Phase 2
+══════════════════════════════════════════════════════════════════
+
+▶ Pre-flight checks
+──────────────────────────────────────────────────────────────────
+  ✓ Git status clean
+  ✓ On branch main
+
+▶ Snapshot verification
+──────────────────────────────────────────────────────────────────
+  ✓ Found snapshot: 1.1.26-snap
+
+▶ Final version
+──────────────────────────────────────────────────────────────────
+  Current: 1.1.25
+  Release: 1.1.26
+
+  Proceed with final release? (y/N): y
+
+▶ Release notes
+──────────────────────────────────────────────────────────────────
+
+## Release 1.1.26
+
+### ✨ New Features
 
 - Add automated publishing helper script
-- New component theming system
 
-## 🐛 Bug Fixes
+### 🐛 Bug Fixes
 
-- Fix build issues with Parcel
+- Upgrade Yarn to 4.10.3 to resolve ExperimentalWarning
 
-## 📚 Documentation
+  Use these release notes? (Y/n): y
 
-- Add comprehensive theming documentation
+▶ Git operations
+──────────────────────────────────────────────────────────────────
+  Version bump...
+  ✓ Version bump
+
+  Push commit...
+  ✓ Push commit
+
+  Push tags...
+  ✓ Push tags
+
+▶ Publishing to npm
+──────────────────────────────────────────────────────────────────
+  Publishing release...
+  ✓ Publishing release
+
+▶ GitHub release
+──────────────────────────────────────────────────────────────────
+  Creating GitHub release...
+  ✓ Creating GitHub release
+
+══════════════════════════════════════════════════════════════════
+  ✅ Release Published Successfully!
+══════════════════════════════════════════════════════════════════
+
+Version 1.1.26 is now live on npm.
 ```
 
-### Usage
+## Prerequisites
 
-```bash
-yarn publish:release
-```
+### Required
 
-Or directly:
+- Clean git working directory
+- npm authentication (`npm login`)
+- Push access to GitHub repository
 
-```bash
-node scripts/publish.js
-```
+### Optional
 
-### Prerequisites
+- [GitHub CLI](https://cli.github.com/) (`gh`) for automatic GitHub release creation
 
-- Clean git working directory (no uncommitted changes)
-- Authenticated git push access to the repository
-- *(Optional)* GitHub CLI (`gh`) for automatic release creation
-
-### Installation of GitHub CLI (optional but recommended)
+To install GitHub CLI:
 
 ```bash
 # macOS
@@ -77,54 +257,65 @@ sudo apt install gh
 gh auth login
 ```
 
-### Workflow
+## Version Types
 
-1. Run `yarn publish:release`
-2. Script shows current version and calculates new versions for each bump type
-3. Select version type: `patch` (1.1.25 → 1.1.26), `minor` (1.1.25 → 1.2.0), or `major` (1.1.25 → 2.0.0)
-4. Confirm the version bump
-5. Enter release notes describing changes
-6. Script performs version bump, commits, and pushes
-7. If `gh` CLI is installed: GitHub release is created automatically
-8. If `gh` CLI is not installed: Manual link provided to create release
-9. GitHub Actions workflow automatically publishes to npm registry
+- **patch** (X.X.1): Bug fixes, no new features
+- **minor** (X.1.0): New features, backward compatible
+- **major** (1.0.0): Breaking changes, not backward compatible
 
-### Version Types
+## Troubleshooting
 
-- **patch** (1.1.x): Bug fixes, minor changes, no new features
-- **minor** (1.x.0): New features, backward compatible
-- **major** (x.0.0): Breaking changes, not backward compatible
+### "You have uncommitted changes"
 
-### Troubleshooting
-
-**Error: "You have uncommitted changes"**
-- Commit or stash your changes before publishing
-- Run `git status` to see what needs to be committed
-
-**Error: "Could not create GitHub release"**
-- The script provides a direct link to manually create the release
-- Go to the provided URL and fill in the release details
-
-**Release created but not published to npm**
-- Check GitHub Actions workflow: https://github.com/scherler/sirocco-wc/actions
-- Ensure `NPM_TOKEN` secret is configured in repository settings
-- Workflow runs automatically when a GitHub release is created
-
-### Manual Publishing
-
-If you prefer not to use this script, you can publish manually:
+Commit or stash your changes before publishing:
 
 ```bash
-# Bump version
+git status
+git add .
+git commit -m "Prepare for release"
+```
+
+### "Not logged in to npm"
+
+Log in to npm:
+
+```bash
+npm login
+```
+
+### "No snapshot found"
+
+The finalize command expects a snapshot to exist. Either:
+1. Run `yarn publish:snapshot` first (recommended)
+2. Or confirm to proceed without snapshot testing
+
+### Publishing failed
+
+If publishing fails:
+- Check npm credentials
+- Verify network connection
+- Ensure package name is not taken
+- Check npm registry status
+
+For snapshots, the `package.json` is automatically restored on failure.
+
+## Manual Publishing (Not Recommended)
+
+If you need to publish manually without this script:
+
+```bash
+# Version bump
 npm version patch  # or minor, or major
 
-# Push to git
+# Push
 git push origin main
 git push origin --tags
 
-# Create GitHub release at:
-# https://github.com/scherler/sirocco-wc/releases/new
-
-# Or publish directly to npm
+# Publish
 npm publish
+
+# Create GitHub release manually at:
+# https://github.com/scherler/sirocco-wc/releases/new
 ```
+
+However, we **strongly recommend** using the two-phase workflow for safety.
