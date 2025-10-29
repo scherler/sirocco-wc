@@ -24,3 +24,18 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# yarn 2 in templates
+bin/template/.yarn/*
+!bin/template/.yarn/patches
+!bin/template/.yarn/plugins
+!bin/template/.yarn/releases
+!bin/template/.yarn/sdks
+!bin/template/.yarn/versions
+
+bin/showcase-template/.yarn/*
+!bin/showcase-template/.yarn/patches
+!bin/showcase-template/.yarn/plugins
+!bin/showcase-template/.yarn/releases
+!bin/showcase-template/.yarn/sdks
+!bin/showcase-template/.yarn/versions
