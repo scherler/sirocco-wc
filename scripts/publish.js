@@ -207,6 +207,36 @@ function checkGhCli() {
   }
 }
 
+function checkVersionExists(packageName, version) {
+  try {
+    execSync(`npm view ${packageName}@${version} version`, { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function findNextAvailableSnapshot(packageName, baseVersion) {
+  const baseSnapshotVersion = `${baseVersion}-snap`;
+
+  // Check if base version exists
+  if (!checkVersionExists(packageName, baseSnapshotVersion)) {
+    return baseSnapshotVersion;
+  }
+
+  // Try .1, .2, .3, etc.
+  let revision = 1;
+  while (revision < 100) { // Safety limit
+    const versionWithRevision = `${baseSnapshotVersion}.${revision}`;
+    if (!checkVersionExists(packageName, versionWithRevision)) {
+      return versionWithRevision;
+    }
+    revision++;
+  }
+
+  throw new Error('Could not find available snapshot version (tried up to .99)');
+}
+
 async function publishSnapshot(otpFlag = '') {
   header('📦 Snapshot Publishing - Phase 1');
 
@@ -241,9 +271,19 @@ async function publishSnapshot(otpFlag = '') {
   }
 
   const newVersion = calculateNewVersion(currentVersion, versionType);
-  const snapshotVersion = `${newVersion}-snap`;
 
-  log(`\n  📸 Snapshot version: ${snapshotVersion}`, colors.cyan);
+  // Find next available snapshot version
+  section('Checking npm registry');
+  const snapshotVersion = findNextAvailableSnapshot('sirocco-wc', newVersion);
+
+  if (snapshotVersion !== `${newVersion}-snap`) {
+    log(`  ℹ Version ${newVersion}-snap already exists on npm`, colors.yellow);
+    log(`  → Using next available: ${snapshotVersion}`, colors.cyan);
+  } else {
+    log(`  ✓ Version ${snapshotVersion} is available`, colors.green);
+  }
+
+  log(`\n  📸 Snapshot version: ${snapshotVersion}`, colors.bright);
 
   const confirmPublish = await confirm('\n  Proceed with snapshot publishing?', false);
   if (!confirmPublish) {
