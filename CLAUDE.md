@@ -28,7 +28,9 @@ The tool itself is built in Node.js and provides CLI commands to scaffold projec
 
 The CLI is built using @caporal/core and has four main commands defined in `bin/main.js`:
 
-- **init** (`bin/init.js`): Scaffolds a new project by copying the template directory
+- **init** (`bin/init.js`): Scaffolds a new project by copying the template directory. Supports two templates:
+  - `default` (minimal starter): Basic infrastructure in `bin/template/`
+  - `showcase` (full-featured demo): Comprehensive example app in `bin/showcase-template/` based on sirocco-showcase
 - **add** (`bin/add.js`): Creates new Lit components with automatic CSS/TypeScript generation
 - **buildCss** (`bin/build.styles.js`): Processes CSS files and generates `.styles.ts` files for Lit components
 - **watchCss** (`bin/build.watch.js`): Watches for changes and rebuilds styles automatically
@@ -38,6 +40,7 @@ Configuration is centralized in `bin/config.js` with environment variable overri
 - `SWC_PREFIX`: Component prefix (default: 'swc-')
 - `SWC_INDEX`: Index file name (default: 'index.ts')
 - `SWC_SRC`: Source directory (default: 'src/main/ts')
+- `SWC_DEST`: Destination directory (default: 'dist')
 - `SWC_CSS`: CSS glob pattern (default: 'src/main/ts/**/*.css')
 
 ### Component Generation Flow
@@ -56,9 +59,13 @@ Configuration is centralized in `bin/config.js` with environment variable overri
    - Generate `.styles.ts` files as Lit css`` tagged templates
    - Strip comments from final output
 
-### Template Structure (bin/template/)
+### Template Structure
 
-The template provides a complete project setup with:
+sirocco-wc provides two project templates:
+
+#### Default Template (bin/template/)
+
+A minimal starter template providing basic infrastructure:
 - Yarn 3.2.4 (Berry) with PnP enabled
 - TypeScript configuration
 - Parcel for bundling
@@ -75,6 +82,28 @@ src/main/ts/
 ├── helper/       # Utility functions
 └── index.ts      # Main entry point
 ```
+
+#### Showcase Template (bin/showcase-template/)
+
+A comprehensive showcase template based on sirocco-showcase with:
+- All features from the default template
+- Material Web Components integration (@material/web)
+- Complete working application with multiple pre-built components:
+  - Header, Footer, Hero, Card, Carousel, ThemeToggle
+- Global theming system with CSS variables
+- Interactive tutorial view
+- Best practice examples for:
+  - Component architecture
+  - Shadow DOM styling
+  - Accessibility patterns
+  - Theme management
+  - Material component theming
+
+This template is ideal for:
+- Learning sirocco-wc patterns
+- Starting projects with a solid foundation
+- Reference implementations
+- Understanding best practices
 
 ## Common Development Commands
 

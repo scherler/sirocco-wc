@@ -103,10 +103,37 @@ COMMANDS — Type 'sirocco-wc help <command>' to get some help about a command
 ### init - Scaffolding your project
 
 ```bash
-sirocco-wc ["init" || "i"]
+sirocco-wc ["init" || "i"] [-t template]
 ```
 
 Scaffolding your project to add the infrastructure needed to develop as described in the [README](./bin/template/README.md) of the template.
+
+#### Template Options
+
+sirocco-wc now supports two project templates:
+
+**Default Template** (minimal starter)
+```bash
+sirocco-wc init
+# or explicitly
+sirocco-wc init -t default
+```
+
+A minimal starter template with basic infrastructure. Perfect for starting from scratch.
+
+**Showcase Template** (full-featured demo)
+```bash
+sirocco-wc init -t showcase
+```
+
+A comprehensive showcase application based on [sirocco-showcase](https://github.com/scherler/sirocco-showcase) featuring:
+- Complete working application with multiple components
+- Material Web Components integration
+- Global theming system (light/dark/auto modes)
+- Interactive tutorial system
+- Accessible carousel implementation
+- Best practices demonstrations
+- Real-world component architecture examples
 
 This structure allows to quickly develop with lit and tailwind. Further our defaults are ready for being used in a jenkins plugin. It will further direcly migrate to yarn 2 and install some recommended plugins.
 

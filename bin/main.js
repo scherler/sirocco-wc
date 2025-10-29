@@ -11,8 +11,12 @@ program
     .version(sversion)
     .command("init", "Scaffolding your project")
     .alias("i")
-    .action(({ logger }) => {
-        init(logger);
+    .option("-t, --template <template>", "Template type (default or showcase)", {
+        default: "default",
+        validator: ["default", "showcase"],
+    })
+    .action(({ logger, options }) => {
+        init(logger, options);
     })
     .command("add", "add component")
     .alias("a")

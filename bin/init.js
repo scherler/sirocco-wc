@@ -2,11 +2,14 @@ const fs = require("fs");
 const shell = require("shelljs");
 const prompt = require("prompt");
 
-const templatePath = `${__dirname}/template`;
 const localPath = process.cwd();
 const localPathTmp = `${localPath}/tmp`;
 
-module.exports = (logger) => {
+module.exports = (logger, options) => {
+    const templateType = options?.template || 'default';
+    const templatePath = `${__dirname}/${templateType === 'showcase' ? 'showcase-template' : 'template'}`;
+
+    logger.info(`Using '${templateType}' template...`);
     logger.info("Copying files to temp dir…");
     shell.mkdir(localPathTmp)
     shell.cp("-R", `${templatePath}/*`, localPathTmp);

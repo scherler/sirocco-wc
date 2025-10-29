@@ -1,0 +1,42 @@
+:host {
+  @apply block;
+}
+
+.header-container {
+  background-color: var(--surface-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-link {
+  @apply px-3 py-2 rounded-md text-sm font-medium transition-colors;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: var(--text-accent);
+}
+
+.header-button {
+  @apply items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md transition-colors;
+  background-color: var(--action-primary);
+  color: var(--text-inverse);
+  cursor: pointer;
+}
+
+.header-button:hover {
+  background-color: var(--action-primary-hover);
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+.very-muted-text {
+  @apply text-xs;
+  color: var(--text-tertiary);
+}

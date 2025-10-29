@@ -1,0 +1,82 @@
+:host {
+  @apply block;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  @apply hidden;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.carousel-wrapper {
+  @apply relative flex items-center rounded-xl p-4;
+  border: 2px solid var(--border-default);
+  background-color: var(--surface-primary);
+}
+
+.carousel-button {
+  pointer-events: auto;
+}
+
+.scroll-container {
+  scroll-marker-group: after;
+}
+
+::slotted(*) {
+  @apply flex-shrink-0;
+  width: 350px;
+  scroll-snap-align: start;
+}
+
+/* Controls */
+.control-label {
+  color: var(--text-secondary);
+}
+
+.control-input {
+  border: 1px solid var(--border-default);
+  background-color: var(--surface-primary);
+  color: var(--text-primary);
+}
+
+/* Navigation Buttons */
+.nav-button {
+  background-color: var(--surface-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+}
+
+.nav-button:hover {
+  background-color: var(--surface-secondary);
+}
+
+/* Scroll Indicators */
+.scroll-indicators {
+  @apply flex items-center justify-center gap-2 mt-4;
+}
+
+.scroll-indicator {
+  @apply rounded-full transition-all duration-300 cursor-pointer border-none outline-none;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  background-color: var(--border-emphasis);
+}
+
+.scroll-indicator:hover {
+  @apply scale-110;
+  background-color: var(--text-secondary);
+}
+
+.scroll-indicator.active {
+  @apply scale-125;
+  background-color: var(--action-primary);
+}
+
+.scroll-indicator:focus-visible {
+  @apply ring-2 ring-offset-2;
+  --tw-ring-color: var(--action-primary);
+}

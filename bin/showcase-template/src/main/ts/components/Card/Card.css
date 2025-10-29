@@ -1,0 +1,51 @@
+:host {
+  @apply block;
+}
+
+.card-container {
+  @apply rounded-xl overflow-hidden transform transition-all duration-300;
+  background-color: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+}
+
+.card-container:hover {
+  border-color: var(--border-emphasis);
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-0.25rem);
+}
+
+.card-title {
+  @apply text-lg font-semibold transition-colors m-0;
+  color: var(--text-primary);
+}
+
+.group:hover .card-title {
+  color: var(--text-accent);
+}
+
+.card-description {
+  @apply leading-relaxed text-sm flex-grow;
+  color: var(--text-secondary);
+}
+
+.card-link {
+  @apply text-xs truncate;
+  color: var(--text-accent);
+}
+
+.card-icon-bg {
+  @apply flex items-center justify-center w-14 h-14 rounded-lg transition-colors flex-shrink-0;
+  background: var(--gradient-accent);
+}
+
+.group:hover .card-icon-bg {
+  background: var(--gradient-accent);
+  opacity: 0.9;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}

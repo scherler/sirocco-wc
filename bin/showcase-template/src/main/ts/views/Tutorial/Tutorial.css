@@ -1,0 +1,144 @@
+:host {
+  @apply block;
+}
+
+.tutorial-container {
+  @apply min-h-screen py-8 px-4;
+  background: var(--gradient-hero);
+}
+
+.tutorial-layout {
+  @apply max-w-7xl mx-auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .tutorial-layout {
+    grid-template-columns: 400px 1fr;
+  }
+}
+
+/* Navigation Section */
+.tutorial-nav {
+  @apply rounded-xl p-6;
+  background-color: var(--surface-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.nav-heading {
+  @apply text-2xl font-bold mb-6;
+  color: var(--text-primary);
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.nav-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.nav-grid::-webkit-scrollbar-track {
+  background-color: var(--border-subtle);
+  border-radius: 3px;
+}
+
+.nav-grid::-webkit-scrollbar-thumb {
+  background-color: var(--action-primary);
+  border-radius: 3px;
+}
+
+.nav-card {
+  @apply rounded-lg p-4 transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center gap-2;
+  background-color: var(--surface-primary);
+  border: 2px solid var(--border-subtle);
+  min-height: 100px;
+}
+
+.nav-card:hover {
+  @apply transform -translate-y-1;
+  background-color: var(--surface-accent);
+  box-shadow: var(--shadow-md);
+}
+
+.nav-card.active {
+  border-color: var(--action-primary);
+  background-color: var(--action-primary);
+}
+
+.nav-card.active .nav-title {
+  color: var(--text-inverse);
+  font-weight: 600;
+}
+
+.nav-icon {
+  @apply text-3xl;
+}
+
+.nav-title {
+  @apply text-sm font-medium;
+  color: var(--text-secondary);
+}
+
+/* Content Section */
+.tutorial-content {
+  @apply rounded-xl p-8;
+  background-color: var(--surface-primary);
+  box-shadow: var(--shadow-lg);
+  min-height: 600px;
+}
+
+.section-heading {
+  @apply text-3xl font-bold mb-4;
+  color: var(--text-primary);
+}
+
+.section-description {
+  @apply text-lg mb-6 leading-relaxed;
+  color: var(--text-secondary);
+}
+
+.subsection-heading {
+  @apply text-xl font-semibold mt-8 mb-4;
+  color: var(--text-primary);
+}
+
+/* Code Blocks */
+pre {
+  @apply rounded-lg p-4 overflow-x-auto mb-6;
+  background-color: var(--surface-tertiary);
+  margin: 0;
+}
+
+code {
+  @apply text-sm;
+  font-family: 'Courier New', Courier, monospace;
+  display: block;
+  white-space: pre;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .nav-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tutorial-content {
+    @apply p-4;
+  }
+}

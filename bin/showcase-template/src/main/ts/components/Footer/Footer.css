@@ -1,0 +1,57 @@
+:host {
+  @apply block;
+}
+
+.footer-container {
+  background-color: var(--surface-secondary);
+  color: var(--text-secondary);
+}
+
+.footer-heading {
+  @apply text-lg font-bold mb-4;
+  color: var(--text-primary);
+}
+
+.footer-section-heading {
+  @apply text-sm font-semibold mb-4 uppercase tracking-wider;
+  color: var(--text-primary);
+}
+
+.footer-link {
+  @apply transition-colors;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: var(--text-accent);
+}
+
+.footer-muted-text {
+  color: var(--text-tertiary);
+}
+
+.footer-very-muted-text {
+  @apply text-sm;
+  color: var(--text-tertiary);
+}
+
+.footer-border {
+  border-color: var(--border-subtle);
+}
+
+a {
+  text-decoration: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

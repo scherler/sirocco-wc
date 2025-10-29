@@ -1,0 +1,31 @@
+:host {
+  @apply block;
+}
+
+.theme-toggle {
+  @apply flex items-center gap-1 p-1 rounded-lg;
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.theme-button {
+  @apply p-2 rounded-md transition-all duration-200 cursor-pointer border-none;
+  background-color: transparent;
+  color: var(--text-secondary);
+}
+
+.theme-button:hover {
+  background-color: var(--surface-tertiary);
+  color: var(--text-primary);
+}
+
+.theme-button.active {
+  background-color: var(--action-primary);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.icon {
+  @apply w-5 h-5;
+  display: block;
+}

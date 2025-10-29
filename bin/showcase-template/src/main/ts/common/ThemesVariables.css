@@ -1,0 +1,138 @@
+/**
+ * Global Theme Variables
+ * Uses data-theme attribute on root element to switch between light and dark themes.
+ * All components inherit these variables automatically.
+ * Colors are defined in tailwind.config.js and referenced here using theme() function.
+ */
+
+/* Light Theme (default) */
+:root,
+[data-theme='light'] {
+  /* Surface colors - backgrounds */
+  --surface-primary: theme('colors.light.surface-primary');
+  --surface-secondary: theme('colors.light.surface-secondary');
+  --surface-tertiary: theme('colors.light.surface-tertiary');
+  --surface-accent: theme('colors.light.surface-accent');
+
+  /* Text colors */
+  --text-primary: theme('colors.light.text-primary');
+  --text-secondary: theme('colors.light.text-secondary');
+  --text-tertiary: theme('colors.light.text-tertiary');
+  --text-accent: theme('colors.light.text-accent');
+  --text-inverse: theme('colors.light.text-inverse');
+
+  /* Border colors */
+  --border-subtle: theme('colors.light.border-subtle');
+  --border-default: theme('colors.light.border-default');
+  --border-emphasis: theme('colors.light.border-emphasis');
+
+  /* Action/Interactive colors */
+  --action-primary: theme('colors.light.action-primary');
+  --action-primary-hover: theme('colors.light.action-primary-hover');
+  --action-secondary: theme('colors.light.action-secondary');
+  --action-secondary-hover: theme('colors.light.action-secondary-hover');
+
+  /* Status colors */
+  --status-success: theme('colors.light.status-success');
+  --status-warning: theme('colors.light.status-warning');
+  --status-error: theme('colors.light.status-error');
+  --status-info: theme('colors.light.status-info');
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 50%, #fce7f3 100%);
+  --gradient-accent: linear-gradient(135deg, theme('colors.light.action-primary') 0%, theme('colors.light.action-secondary') 100%);
+}
+
+/* Dark Theme */
+[data-theme='dark'] {
+  /* Surface colors - backgrounds */
+  --surface-primary: theme('colors.dark.surface-primary');
+  --surface-secondary: theme('colors.dark.surface-secondary');
+  --surface-tertiary: theme('colors.dark.surface-tertiary');
+  --surface-accent: theme('colors.dark.surface-accent');
+
+  /* Text colors */
+  --text-primary: theme('colors.dark.text-primary');
+  --text-secondary: theme('colors.dark.text-secondary');
+  --text-tertiary: theme('colors.dark.text-tertiary');
+  --text-accent: theme('colors.dark.text-accent');
+  --text-inverse: theme('colors.dark.text-inverse');
+
+  /* Border colors */
+  --border-subtle: theme('colors.dark.border-subtle');
+  --border-default: theme('colors.dark.border-default');
+  --border-emphasis: theme('colors.dark.border-emphasis');
+
+  /* Action/Interactive colors */
+  --action-primary: theme('colors.dark.action-primary');
+  --action-primary-hover: theme('colors.dark.action-primary-hover');
+  --action-secondary: theme('colors.dark.action-secondary');
+  --action-secondary-hover: theme('colors.dark.action-secondary-hover');
+
+  /* Status colors */
+  --status-success: theme('colors.dark.status-success');
+  --status-warning: theme('colors.dark.status-warning');
+  --status-error: theme('colors.dark.status-error');
+  --status-info: theme('colors.dark.status-info');
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, #1e293b 0%, #334155 50%, #3730a3 100%);
+  --gradient-accent: linear-gradient(135deg, theme('colors.dark.action-primary') 0%, theme('colors.dark.action-secondary') 100%);
+}
+
+/* Automatic dark mode based on system preference (fallback) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    /* Surface colors - backgrounds */
+    --surface-primary: theme('colors.dark.surface-primary');
+    --surface-secondary: theme('colors.dark.surface-secondary');
+    --surface-tertiary: theme('colors.dark.surface-tertiary');
+    --surface-accent: theme('colors.dark.surface-accent');
+
+    /* Text colors */
+    --text-primary: theme('colors.dark.text-primary');
+    --text-secondary: theme('colors.dark.text-secondary');
+    --text-tertiary: theme('colors.dark.text-tertiary');
+    --text-accent: theme('colors.dark.text-accent');
+    --text-inverse: theme('colors.dark.text-inverse');
+
+    /* Border colors */
+    --border-subtle: theme('colors.dark.border-subtle');
+    --border-default: theme('colors.dark.border-default');
+    --border-emphasis: theme('colors.dark.border-emphasis');
+
+    /* Action/Interactive colors */
+    --action-primary: theme('colors.dark.action-primary');
+    --action-primary-hover: theme('colors.dark.action-primary-hover');
+    --action-secondary: theme('colors.dark.action-secondary');
+    --action-secondary-hover: theme('colors.dark.action-secondary-hover');
+
+    /* Status colors */
+    --status-success: theme('colors.dark.status-success');
+    --status-warning: theme('colors.dark.status-warning');
+    --status-error: theme('colors.dark.status-error');
+    --status-info: theme('colors.dark.status-info');
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, #1e293b 0%, #334155 50%, #3730a3 100%);
+    --gradient-accent: linear-gradient(135deg, theme('colors.dark.action-primary') 0%, theme('colors.dark.action-secondary') 100%);
+  }
+}

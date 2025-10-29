@@ -1,0 +1,52 @@
+:host {
+  @apply block;
+}
+
+.app-container {
+  @apply min-h-screen;
+  background: var(--gradient-hero);
+}
+
+.content-section {
+  @apply rounded-lg p-8;
+  background-color: var(--surface-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.section-heading {
+  @apply text-2xl font-bold mb-4;
+  color: var(--text-primary);
+}
+
+pre {
+  @apply p-4 rounded-lg overflow-x-auto;
+  margin: 0;
+  background-color: var(--surface-tertiary);
+}
+
+code {
+  @apply text-sm;
+  font-family: 'Courier New', Courier, monospace;
+  display: block;
+  white-space: pre;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.prose {
+  color: var(--text-secondary);
+}
+
+.space-y-16 > * + * {
+  margin-top: 4rem;
+}
+
+section h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+section p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+}

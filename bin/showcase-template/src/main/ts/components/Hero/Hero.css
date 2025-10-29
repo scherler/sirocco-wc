@@ -1,0 +1,77 @@
+:host {
+  @apply block;
+}
+
+.hero-container {
+  @apply relative overflow-hidden;
+  background: var(--gradient-hero);
+}
+
+.hero-heading {
+  @apply text-4xl tracking-tight font-extrabold sm:text-5xl md:text-6xl;
+  color: var(--text-primary);
+}
+
+.hero-text {
+  @apply mt-6 max-w-2xl mx-auto text-xl;
+  color: var(--text-secondary);
+}
+
+.hero-button-secondary {
+  @apply inline-flex items-center px-6 py-3 text-base font-medium rounded-lg transition-all;
+  border: 2px solid var(--border-default);
+  color: var(--text-primary);
+  background-color: var(--surface-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.hero-button-secondary:hover {
+  background-color: var(--surface-secondary);
+  box-shadow: var(--shadow-lg);
+}
+
+.blob-1 {
+  @apply absolute -top-40 -right-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob;
+  background-color: var(--action-secondary);
+}
+
+.blob-2 {
+  @apply absolute -bottom-40 -left-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000;
+  background-color: var(--action-primary);
+}
+
+.blob-3 {
+  @apply absolute top-40 left-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000;
+  background-color: var(--action-secondary-hover);
+}
+
+button {
+  cursor: pointer;
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
