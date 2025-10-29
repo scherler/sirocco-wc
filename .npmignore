@@ -1,0 +1,49 @@
+# Build artifacts
+.parcel-cache
+dist
+target
+work
+
+# IDE
+.idea
+*.iml
+.vscode
+
+# Testing
+/test-results/
+/playwright-report/
+/playwright/.cache/
+reports
+
+# Logs
+npm-debug.log
+yarn-error.log
+
+# Development files
+*.styles.ts
+
+# Yarn cache and state files (these are huge and not needed in published package)
+.yarn/cache
+.yarn/install-state.gz
+.yarn/unplugged
+.pnp.*
+
+# Template yarn caches (prevent massive package size)
+bin/template/.yarn/cache
+bin/template/.yarn/install-state.gz
+bin/template/.yarn/unplugged
+bin/template/.pnp.*
+bin/showcase-template/.yarn/cache
+bin/showcase-template/.yarn/install-state.gz
+bin/showcase-template/.yarn/unplugged
+bin/showcase-template/.pnp.*
+
+# Node modules
+node_modules
+
+# Git
+.git
+.gitignore
+
+# Local settings
+.claude
