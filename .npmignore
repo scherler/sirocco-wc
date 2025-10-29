@@ -28,14 +28,10 @@ yarn-error.log
 .yarn/unplugged
 .pnp.*
 
-# Template yarn caches (prevent massive package size)
-bin/template/.yarn/cache
-bin/template/.yarn/install-state.gz
-bin/template/.yarn/unplugged
+# Template yarn directories (prevent massive package size - will be installed by init command)
+bin/template/.yarn
 bin/template/.pnp.*
-bin/showcase-template/.yarn/cache
-bin/showcase-template/.yarn/install-state.gz
-bin/showcase-template/.yarn/unplugged
+bin/showcase-template/.yarn
 bin/showcase-template/.pnp.*
 
 # Node modules

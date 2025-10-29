@@ -51,15 +51,15 @@ module.exports = (logger, options) => {
         shell.rm('-rf', localPathTmp)
 
         logger.info("✔ Success!");
-        logger.info("Setting up yarn 2.");
-        shell.exec('yarn set version berry')
-        logger.info("Exec `yarn install`.");
+        logger.info("Setting up Yarn 4.10.3 (Berry)...");
+        shell.exec('yarn set version 4.10.3')
+        logger.info("Installing dependencies...");
         shell.exec('yarn install')
-        logger.info("Enable interactive yarn.");
+        logger.info("Installing Yarn interactive tools plugin...");
         shell.exec('yarn plugin import interactive-tools')
-        logger.info("Enable typescript in yarn, helps to manage @types/* dependencies automatically.");
+        logger.info("Installing Yarn TypeScript plugin (manages @types/* dependencies automatically)...");
         shell.exec('yarn plugin import typescript')
-        logger.info("Enable vscode in yarn.");
+        logger.info("Setting up VSCode SDKs...");
         shell.exec('yarn dlx @yarnpkg/sdks vscode')
         logger.info("⚠️Please make sure to update the index.html to point to the correct entrypoint in your js code.⚠️");
     });
