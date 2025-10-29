@@ -207,7 +207,7 @@ function checkGhCli() {
   }
 }
 
-async function publishSnapshot() {
+async function publishSnapshot(otpFlag = '') {
   header('📦 Snapshot Publishing - Phase 1');
 
   // Pre-flight checks
@@ -268,7 +268,8 @@ async function publishSnapshot() {
   // Publish to npm with snapshot tag
   section('Publishing to npm');
   try {
-    execCommand('npm publish --tag snapshot', 'Publishing snapshot');
+    const publishCmd = `npm publish --tag snapshot${otpFlag ? ' ' + otpFlag : ''}`;
+    execCommand(publishCmd, 'Publishing snapshot');
   } catch (error) {
     // Restore version on failure
     updatePackageVersion(currentVersion);
@@ -305,7 +306,7 @@ async function publishSnapshot() {
   log('');
 }
 
-async function publishFinal() {
+async function publishFinal(otpFlag = '') {
   header('🚀 Final Release Publishing - Phase 2');
 
   // Pre-flight checks
@@ -392,7 +393,8 @@ async function publishFinal() {
 
   // Publish to npm
   section('Publishing to npm');
-  execCommand('npm publish', 'Publishing release');
+  const publishCmd = `npm publish${otpFlag ? ' ' + otpFlag : ''}`;
+  execCommand(publishCmd, 'Publishing release');
 
   // Create GitHub release
   section('GitHub release');
@@ -426,18 +428,37 @@ async function main() {
   const args = process.argv.slice(2);
   const mode = args[0];
 
+  // Extract --otp flag if present
+  const otpIndex = args.findIndex(arg => arg.startsWith('--otp'));
+  let otpFlag = '';
+
+  if (otpIndex !== -1) {
+    const otpArg = args[otpIndex];
+    if (otpArg.includes('=')) {
+      // Format: --otp=123456
+      otpFlag = otpArg;
+    } else if (args[otpIndex + 1]) {
+      // Format: --otp 123456
+      otpFlag = `--otp=${args[otpIndex + 1]}`;
+    }
+  }
+
   if (mode === 'snapshot' || mode === '--snapshot' || mode === '-s') {
-    await publishSnapshot();
+    await publishSnapshot(otpFlag);
   } else if (mode === 'final' || mode === 'finalize' || mode === '--final' || mode === '-f') {
-    await publishFinal();
+    await publishFinal(otpFlag);
   } else {
     log('Usage:', colors.bright);
-    log('  yarn publish:snapshot  - Publish test version (with -snap suffix)', colors.dim);
-    log('  yarn publish:finalize  - Publish final release after testing', colors.dim);
+    log('  yarn publish:snapshot [--otp=<code>]  - Publish test version (with -snap suffix)', colors.dim);
+    log('  yarn publish:finalize [--otp=<code>]  - Publish final release after testing', colors.dim);
     log('');
     log('Workflow:', colors.cyan);
     log('  1. yarn publish:snapshot  → Test the snapshot', colors.dim);
     log('  2. yarn publish:finalize  → Publish final version', colors.dim);
+    log('');
+    log('OTP (Two-Factor Auth):', colors.cyan);
+    log('  If you have 2FA enabled, add --otp=<code> to the command', colors.dim);
+    log('  Example: yarn publish:snapshot --otp=123456', colors.dim);
     process.exit(1);
   }
 }
