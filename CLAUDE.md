@@ -16,6 +16,15 @@ This project includes specialized Claude Code personalities in `.clauderc-person
 
 These personalities contain proven patterns, detailed implementation examples, and comprehensive best practices. Reference them when working on sirocco-wc projects to leverage accumulated expertise.
 
+### Frontend development skill
+
+`.claude/skills/frontend-dev/` (Claude Code skill, `SKILL.md` + `references/` +
+`workflow/`) covers building Lit/Tailwind/Material-Web frontends with sirocco-wc:
+component structure, global theming (`theme.css`'s `@theme` block — see
+`workflow/step3-global-theme.md`), DRY composition, and accessibility.
+Kept in sync with the actual build pipeline in `bin/`; update it alongside any
+change to `bin/build.css.js`/`bin/config.js`'s theming mechanism.
+
 ## Project Overview
 
 sirocco-wc is a CLI scaffolding tool that fuses Lit web components with Tailwind CSS. It provides zero-configuration development using Parcel, with integrated Playwright and Jest testing, specifically designed for Jenkins plugin development.
