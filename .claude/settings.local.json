@@ -8,7 +8,7 @@
       "Grep(**)",
       "Task(**)",
       "Bash(**)",
-      "WebFetch(**)"
+      "WebFetch(domain:*)"
     ],
     "deny": [],
     "ask": [],
