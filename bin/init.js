@@ -51,16 +51,18 @@ module.exports = (logger, options) => {
         shell.rm('-rf', localPathTmp)
 
         logger.info("✔ Success!");
-        logger.info("Setting up Yarn 4.10.3 (Berry)...");
-        shell.exec('yarn set version 4.10.3')
-        logger.info("Installing dependencies...");
-        shell.exec('yarn install')
-        logger.info("Installing Yarn interactive tools plugin...");
-        shell.exec('yarn plugin import interactive-tools')
-        logger.info("Installing Yarn TypeScript plugin (manages @types/* dependencies automatically)...");
-        shell.exec('yarn plugin import typescript')
-        logger.info("Setting up VSCode SDKs...");
-        shell.exec('yarn dlx @yarnpkg/sdks vscode')
+        if (!process.env.SWC_SKIP_POSTINIT) {
+            logger.info("Setting up Yarn 4.18.0 (Berry)...");
+            shell.exec('yarn set version 4.18.0')
+            logger.info("Installing dependencies...");
+            shell.exec('yarn install')
+            logger.info("Installing Yarn interactive tools plugin...");
+            shell.exec('yarn plugin import interactive-tools')
+            logger.info("Installing Yarn TypeScript plugin (manages @types/* dependencies automatically)...");
+            shell.exec('yarn plugin import typescript')
+            logger.info("Setting up VSCode SDKs...");
+            shell.exec('yarn dlx @yarnpkg/sdks vscode')
+        }
         logger.info("⚠️Please make sure to update the index.html to point to the correct entrypoint in your js code.⚠️");
     });
 };

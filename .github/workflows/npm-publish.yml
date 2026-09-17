@@ -11,23 +11,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
-      - run: npm ci
-      - run: npm test
+          node-version: 20
+      # This repository is Yarn Berry only (no package-lock.json), so `npm ci`
+      # never had a valid target here.
+      - run: corepack enable
+      - run: yarn install --immutable
+      - run: node scripts/validate-templates.js
 
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
+      - run: corepack enable
+      - run: yarn install --immutable
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

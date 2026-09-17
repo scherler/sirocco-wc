@@ -53,9 +53,13 @@ Configuration is centralized in `bin/config.js` with environment variable overri
 
 2. The component is automatically registered in the parent `index.ts` file
 
-3. `bin/build.css.js` uses PostCSS + Tailwind to:
-   - Wrap CSS with Tailwind directives (@tailwind base/components/utilities)
+3. `bin/build.css.js` uses PostCSS + Tailwind v4 (`@tailwindcss/postcss`) to:
+   - Prepend `@import "tailwindcss/theme.css"`, the project's `theme.css` (when
+     present), and `@import "tailwindcss/utilities.css" source(none)` plus an
+     `@source` pointing at the component's own `.ts` file
    - Process through PostCSS pipeline with autoprefixer
+   - Unwrap Tailwind's `@layer properties` `@supports` gate so `@property`
+     fallbacks apply inside Shadow DOM
    - Generate `.styles.ts` files as Lit css`` tagged templates
    - Strip comments from final output
 
@@ -66,13 +70,13 @@ sirocco-wc provides two project templates:
 #### Default Template (bin/template/)
 
 A minimal starter template providing basic infrastructure:
-- Yarn 3.2.4 (Berry) with PnP enabled
+- Yarn 4.18.0 (Berry) with PnP enabled
 - TypeScript configuration
 - Parcel for bundling
 - Playwright for E2E testing
 - Jest for unit testing
 - ESLint + Prettier with husky pre-commit hooks
-- Tailwind CSS with @tailwindcss/forms, @tailwindcss/typography, @tailwindcss/line-clamp
+- Tailwind CSS v4 via @tailwindcss/postcss, themed from a root `theme.css`
 
 Generated projects follow the structure:
 ```
@@ -109,7 +113,19 @@ This template is ideal for:
 
 ### Within sirocco-wc repository (tool development)
 
-No build or test commands are defined in the root package.json. This is a simple Node.js CLI tool that runs directly.
+This is a Node.js CLI tool that runs directly — there is no build step. The
+root package.json does provide self-check commands:
+
+```bash
+yarn lint                          # eslint bin/*.js scripts/*.js
+yarn typecheck                     # tsc -p tsconfig.json (checkJs over bin/ + scripts/)
+yarn selftest                      # CLI smoke test (--version && --help)
+node scripts/validate-templates.js # scaffold, install, build and lint both templates
+```
+
+`scripts/validate-templates.js` is the regression harness CI runs; add
+`--only=default|showcase` to narrow it and `--keep` to leave the scaffolded temp
+directories in place for inspection.
 
 ### Within generated projects (for users of sirocco-wc)
 
@@ -152,11 +168,15 @@ All components use Shadow DOM, which means:
 
 ### Style Generation Process
 
-The `bin/build.css.js` module:
+The `bin/build.css.js` module (async — it returns the PostCSS promise):
 1. Reads the component's `.css` file
-2. Wraps it with Tailwind directives
-3. Sets `tailwindConfig.content` to the component's `.ts` file for JIT compilation
-4. Processes through PostCSS with Tailwind and autoprefixer
+2. Prepends the Tailwind v4 imports: `tailwindcss/theme.css`, the project's
+   root `theme.css` if one exists, and `tailwindcss/utilities.css source(none)`
+3. Adds `@source "<Component>.ts"` so JIT scans only this component (v4's
+   automatic source detection is disabled by `source(none)`, which otherwise
+   leaks sibling components' classes into every `.styles.ts`)
+4. Processes through PostCSS with `@tailwindcss/postcss` and autoprefixer, then
+   unwraps the `@layer properties` `@supports` gate for Shadow DOM
 5. Outputs as Lit-compatible `css\`...\`` template in `.styles.ts`
 6. Strips comments and escapes backticks
 
@@ -188,8 +208,12 @@ The `bin/add.js` automatically updates parent `index.ts` files when creating new
 - Never edit `.styles.ts` files - they are auto-generated and will be overwritten
 - Always include a `.css` file (even if empty) for each component - the build system requires it
 - Component names are automatically PascalCased and prefixed (e.g., 'test' → 'swc-test')
-- The tool uses synchronous file operations throughout
-- Tailwind config is loaded from the local project if available, otherwise uses minimal config
+- File reads/writes are synchronous, but the CSS build itself is asynchronous
+  (`buildCss`/`build.styles.js` return promises and `bin/main.js` awaits them)
+- Theme tokens come from a CSS-native `theme.css` (`@theme { ... }`) at the
+  project root. Tailwind v4 has no JS-config bridge: a leftover
+  `tailwind.config.js` is not read, and `bin/config.js` warns when it finds one
+  without a `theme.css`
 
 ## Package Exports
 

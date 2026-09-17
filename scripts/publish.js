@@ -243,7 +243,7 @@ async function publishSnapshot(otpFlag = '') {
   // Pre-flight checks
   section('Pre-flight checks');
   checkGitStatus();
-  const branch = checkGitBranch();
+  checkGitBranch();
   const currentVersion = getCurrentVersion();
 
   if (currentVersion.endsWith('-snap')) {
@@ -310,7 +310,7 @@ async function publishSnapshot(otpFlag = '') {
   try {
     const publishCmd = `npm publish --tag snapshot${otpFlag ? ' ' + otpFlag : ''}`;
     execCommand(publishCmd, 'Publishing snapshot');
-  } catch (error) {
+  } catch {
     // Restore version on failure
     updatePackageVersion(currentVersion);
     log('  ✗ Publishing failed, version restored', colors.red);
@@ -448,7 +448,7 @@ async function publishFinal(otpFlag = '') {
         `gh release create ${tag} --title "Release ${newVersion}" --notes-file ${tempFile}`,
         'Creating GitHub release'
       );
-    } catch (error) {
+    } catch {
       log('  ⚠ Could not create GitHub release automatically', colors.yellow);
       log(`  Create manually: https://github.com/scherler/sirocco-wc/releases/new?tag=v${newVersion}`, colors.blue);
     }
