@@ -1,0 +1,22 @@
+{
+  "name": "lit-component",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal Lit component generated with sirocco-wc, consumed by the sibling React app PoC.",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/components/greetingcard/index.ts",
+  "scripts": {
+    "generate": "SWC_SRC=src SWC_PREFIX=demo- sirocco-wc add greetingcard",
+    "css:build": "SWC_SRC=src sirocco-wc buildCss",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "//": "Versions are pinned exactly (no ^/~) on purpose: see ../README.md — the decorator flags this PoC demonstrates are TypeScript-version-sensitive.",
+  "dependencies": {
+    "lit": "3.3.3"
+  },
+  "devDependencies": {
+    "sirocco-wc": "2.0.0-snap",
+    "typescript": "6.0.3"
+  }
+}

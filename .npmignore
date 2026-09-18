@@ -37,6 +37,9 @@ bin/showcase-template/.pnp.*
 # Node modules
 node_modules
 
+# Documentation examples / proof-of-concepts (not part of the shipped CLI)
+examples
+
 # Git
 .git
 .gitignore
