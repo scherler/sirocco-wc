@@ -246,6 +246,16 @@ async function publishSnapshot(otpFlag = '') {
   checkGitBranch();
   const currentVersion = getCurrentVersion();
 
+  // Check npm authentication early, before any interactive prompts — no point
+  // walking through version selection and confirmation just to fail at the
+  // very end because you're not logged in.
+  if (!checkNpmAuth()) {
+    log('  ✗ Not logged in to npm', colors.red);
+    log('  Run: npm login', colors.yellow);
+    process.exit(1);
+  }
+  log('  ✓ Authenticated with npm', colors.green);
+
   if (currentVersion.endsWith('-snap')) {
     log('  ⚠ Current version already is a snapshot', colors.yellow);
     const proceed = await confirm('  Continue anyway?', false);
@@ -263,7 +273,9 @@ async function publishSnapshot(otpFlag = '') {
   log(`    2) minor → ${calculateNewVersion(currentVersion, 'minor')}-snap`, colors.dim);
   log(`    3) major → ${calculateNewVersion(currentVersion, 'major')}-snap`, colors.dim);
 
-  const versionType = await prompt('\n  Select version type [patch/minor/major]', 'patch');
+  const versionTypeInput = await prompt('\n  Select version type [1-3 or patch/minor/major]', '1');
+  const VERSION_TYPE_BY_NUMBER = { '1': 'patch', '2': 'minor', '3': 'major' };
+  const versionType = VERSION_TYPE_BY_NUMBER[versionTypeInput] || versionTypeInput;
 
   if (!['patch', 'minor', 'major'].includes(versionType)) {
     log('\n✗ Invalid version type', colors.red);
@@ -290,15 +302,6 @@ async function publishSnapshot(otpFlag = '') {
     log('\n✗ Cancelled', colors.yellow);
     process.exit(0);
   }
-
-  // Check npm authentication
-  section('NPM authentication');
-  if (!checkNpmAuth()) {
-    log('  ✗ Not logged in to npm', colors.red);
-    log('  Run: npm login', colors.yellow);
-    process.exit(1);
-  }
-  log('  ✓ Authenticated', colors.green);
 
   // Update version in package.json
   section('Version update');
