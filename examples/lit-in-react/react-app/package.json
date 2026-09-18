@@ -1,0 +1,27 @@
+{
+  "name": "react-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "//": "Versions are pinned exactly (no ^/~) on purpose: this PoC demonstrates a decorator-flag interaction and an @types/react JSX-augmentation shape that are both version-sensitive. See ../README.md.",
+  "dependencies": {
+    "lit-component": "file:../lit-component",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "oxlint": "1.83.0",
+    "typescript": "6.0.3",
+    "vite": "8.3.0"
+  }
+}

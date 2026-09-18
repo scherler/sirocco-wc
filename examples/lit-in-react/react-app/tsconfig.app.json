@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "types": ["vite/client"],
+    "allowArbitraryExtensions": true,
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Lit legacy decorators.
+       These live HERE, not only in ../lit-component/tsconfig.json, and that is
+       load-bearing. `npm run build` runs `tsc -b`, which type-checks one whole
+       program under ONE option set — it does not apply "nearest tsconfig per
+       file". Greetingcard.ts is pulled into this program transitively via the
+       `lit-component` import in src/App.tsx, so without these two flags
+       `tsc -b` fails on its `@property` decorators with TS1240/TS1270. */
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}
