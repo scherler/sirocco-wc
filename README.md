@@ -15,17 +15,11 @@ I was looking for a word that unifies tailwind with lit. A Mediterranean wind th
 
 ## Claude Code Support
 
-This project includes comprehensive Claude Code support with expert personalities that understand sirocco-wc architecture, Lit web components, Tailwind CSS integration, and Jenkins plugin development patterns.
+This project includes Claude Code support for working with sirocco-wc architecture, Lit web components, Tailwind CSS integration, and Jenkins plugin development patterns.
 
 For AI-assisted development:
-- See [CLAUDE.md](./CLAUDE.md) for project guidance and architecture details
-- Explore `.clauderc-personalities/` for specialized expert personalities including:
-  - **sirocco-webcomponent-expert**: Complete mastery of Lit + Tailwind + Sirocco patterns, global theming system
-  - **sirocco-integration-expert**: Jenkins plugin integration and build system expertise
-  - **sirocco-dependency-expert**: Dependency management, package updates, Yarn Berry setup
-  - **sirocco-testing-expert**: Playwright E2E, Jest unit testing, Shadow DOM testing strategies
-
-These personalities provide proven patterns, best practices, and detailed implementation guidance for working with sirocco-wc projects.
+- See [CLAUDE.md](./CLAUDE.md) and [AGENTS.md](./AGENTS.md) for project guidance and architecture details
+- See `.claude/skills/frontend-dev/` for component patterns, global theming, and accessibility guidance
 
 ## Install
 
