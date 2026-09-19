@@ -1,0 +1,70 @@
+/*
+ * Tailwind v4 CSS-native theme for this project.
+ *
+ * This file replaces the Tailwind v3 `tailwind.config.js` that earlier versions
+ * of this template shipped. Tailwind v4 has no JS-config bridge: theme tokens
+ * are declared in CSS inside an `@theme { ... }` block, and each token also
+ * becomes a real custom property you can reference with `var(--...)`.
+ *
+ * sirocco-wc's per-component build (`sirocco-wc buildCss` / `watchCss`) picks
+ * this file up automatically as long as it stays at the project root, and
+ * `@import`s it into every component's generated `.styles.ts`.
+ *
+ * `src/main/ts/common/ThemesVariables.css` goes through Parcel's own PostCSS
+ * pipeline instead, which never sees that automatic import, so it `@import`s
+ * this file explicitly.
+ */
+
+@theme {
+  /* light palette */
+  --color-light-surface-primary: #ffffff;
+  --color-light-surface-secondary: #f8fafc;
+  --color-light-surface-tertiary: #f1f5f9;
+  --color-light-surface-accent: #eff6ff;
+
+  --color-light-text-primary: #0f172a;
+  --color-light-text-secondary: #475569;
+  --color-light-text-tertiary: #64748b;
+  --color-light-text-accent: #2563eb;
+  --color-light-text-inverse: #ffffff;
+
+  --color-light-border-subtle: #e2e8f0;
+  --color-light-border-default: #cbd5e1;
+  --color-light-border-emphasis: #94a3b8;
+
+  --color-light-action-primary: #2563eb;
+  --color-light-action-primary-hover: #1d4ed8;
+  --color-light-action-secondary: #7c3aed;
+  --color-light-action-secondary-hover: #6d28d9;
+
+  --color-light-status-success: #16a34a;
+  --color-light-status-warning: #ea580c;
+  --color-light-status-error: #dc2626;
+  --color-light-status-info: #0284c7;
+
+  /* dark palette */
+  --color-dark-surface-primary: #0f172a;
+  --color-dark-surface-secondary: #1e293b;
+  --color-dark-surface-tertiary: #334155;
+  --color-dark-surface-accent: #1e3a8a;
+
+  --color-dark-text-primary: #f1f5f9;
+  --color-dark-text-secondary: #cbd5e1;
+  --color-dark-text-tertiary: #94a3b8;
+  --color-dark-text-accent: #60a5fa;
+  --color-dark-text-inverse: #0f172a;
+
+  --color-dark-border-subtle: #334155;
+  --color-dark-border-default: #475569;
+  --color-dark-border-emphasis: #64748b;
+
+  --color-dark-action-primary: #3b82f6;
+  --color-dark-action-primary-hover: #60a5fa;
+  --color-dark-action-secondary: #8b5cf6;
+  --color-dark-action-secondary-hover: #a78bfa;
+
+  --color-dark-status-success: #22c55e;
+  --color-dark-status-warning: #f97316;
+  --color-dark-status-error: #ef4444;
+  --color-dark-status-info: #0ea5e9;
+}

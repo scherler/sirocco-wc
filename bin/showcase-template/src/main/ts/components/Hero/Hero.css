@@ -64,14 +64,21 @@ button {
   }
 }
 
-.animate-blob {
+/*
+ * Declared with `@utility` rather than as plain `.class` rules: Tailwind v4's
+ * `@apply` only accepts real utilities, so a plain CSS class defined in the
+ * same file (which Tailwind v3 tolerated) fails with "Cannot apply unknown
+ * utility class". `@utility` registers them properly, and they stay usable both
+ * from `@apply` above and directly from markup.
+ */
+@utility animate-blob {
   animation: blob 7s infinite;
 }
 
-.animation-delay-2000 {
+@utility animation-delay-2000 {
   animation-delay: 2s;
 }
 
-.animation-delay-4000 {
+@utility animation-delay-4000 {
   animation-delay: 4s;
 }

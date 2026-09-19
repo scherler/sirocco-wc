@@ -1,0 +1,86 @@
+/*
+ * Tailwind v4 CSS-native theme for this project.
+ *
+ * This file replaces the Tailwind v3 `tailwind.config.js` that earlier versions
+ * of this template shipped. Tailwind v4 has no JS-config bridge: theme tokens
+ * are declared in CSS inside an `@theme { ... }` block, and each token also
+ * becomes a real custom property you can reference with `var(--...)`.
+ *
+ * sirocco-wc's per-component build (`sirocco-wc buildCss` / `watchCss`) picks
+ * this file up automatically as long as it stays at the project root, and
+ * `@import`s it into every component's generated `.styles.ts`.
+ */
+
+@theme {
+  /* colors -> `bg-*`, `text-*`, `border-*`, ... utilities */
+  --color-DEFAULT: #0099cc;
+  --color-primary: #007acc;
+  --color-grey: #eaeff2;
+  --color-secondary: #289ce1;
+  --color-danger: #d32f2f;
+  --color-success: #2e7d32;
+  --color-note: #000000de;
+  --color-trafficlight-green: #2e7d32;
+  --color-trafficlight-yellow: #ffa726;
+  --color-trafficlight-red: #f44336;
+  --color-secondary-button: rgb(0, 122, 204);
+  --color-grey-dark: #333333;
+  --color-grey-light: #c8c8c8;
+  --color-tabel-seperator: #eaeff2;
+  --color-hover: #f8f8f8;
+  --color-modal-from: #0099cc;
+  --color-modal-to: #007acc;
+  --color-modal-note: #757575;
+
+  /* borderColor tokens (all also available as `border-*` via --color-* above) */
+  --border-color-grey-dark: #333333;
+  --border-color-grey-light: #c8c8c8;
+  --border-color-tabel-seperator: #eaeff2;
+
+  /* textColor tokens */
+  --text-color-DEFAULT: #1e252c;
+  --text-color-primary: #007acc;
+  --text-color-secondary: #289ce1;
+  --text-color-danger: #d32f2f;
+  --text-color-grey-light: #c8c8c8;
+  --text-color-trafficlight-green: #148571;
+  --text-color-trafficlight-yellow: #a96600;
+  --text-color-trafficlight-red: #e22b2f;
+
+  /* fontFamily -> `font-*` utilities */
+  --font-default: "Roboto";
+  --font-sans: "Roboto Sans";
+  --font-open-sans: "Open Sans";
+  --font-source-sans-pro: "Source Sans Pro";
+  --font-montserrat: "Montserrat";
+
+  /*
+   * Only min-width breakpoints belong in the `--breakpoint-*` namespace.
+   * (The v3 config wrote `desktop: { min: '1440' }` with no unit, which was a
+   * bug -- an unitless length is invalid in a media query.)
+   */
+  --breakpoint-desktop: 1440px;
+}
+
+/*
+ * `laptop`/`tablet`/`phone` were max-width breakpoints in the v3 config.
+ * `--breakpoint-*` tokens are always min-width in v4, so reusing that namespace
+ * would silently invert them; they are declared as custom variants instead.
+ */
+@custom-variant laptop (@media (width <= 1366px));
+@custom-variant tablet (@media (width <= 1024px));
+@custom-variant phone (@media (width <= 812px));
+
+/*
+ * A `DEFAULT` key in v3's `colors`/`textColor` produced the bare `.bg`/`.text`
+ * classes (the key is omitted from the generated class name). v4 theme tokens
+ * only ever produce `.bg-DEFAULT`/`.text-DEFAULT`, so the bare classes are
+ * restored explicitly here.
+ */
+@utility text {
+  color: var(--text-color-DEFAULT);
+}
+
+@utility bg {
+  background-color: var(--color-DEFAULT);
+}

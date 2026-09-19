@@ -243,8 +243,18 @@ async function publishSnapshot(otpFlag = '') {
   // Pre-flight checks
   section('Pre-flight checks');
   checkGitStatus();
-  const branch = checkGitBranch();
+  checkGitBranch();
   const currentVersion = getCurrentVersion();
+
+  // Check npm authentication early, before any interactive prompts — no point
+  // walking through version selection and confirmation just to fail at the
+  // very end because you're not logged in.
+  if (!checkNpmAuth()) {
+    log('  ✗ Not logged in to npm', colors.red);
+    log('  Run: npm login', colors.yellow);
+    process.exit(1);
+  }
+  log('  ✓ Authenticated with npm', colors.green);
 
   if (currentVersion.endsWith('-snap')) {
     log('  ⚠ Current version already is a snapshot', colors.yellow);
@@ -263,7 +273,9 @@ async function publishSnapshot(otpFlag = '') {
   log(`    2) minor → ${calculateNewVersion(currentVersion, 'minor')}-snap`, colors.dim);
   log(`    3) major → ${calculateNewVersion(currentVersion, 'major')}-snap`, colors.dim);
 
-  const versionType = await prompt('\n  Select version type [patch/minor/major]', 'patch');
+  const versionTypeInput = await prompt('\n  Select version type [1-3 or patch/minor/major]', '1');
+  const VERSION_TYPE_BY_NUMBER = { '1': 'patch', '2': 'minor', '3': 'major' };
+  const versionType = VERSION_TYPE_BY_NUMBER[versionTypeInput] || versionTypeInput;
 
   if (!['patch', 'minor', 'major'].includes(versionType)) {
     log('\n✗ Invalid version type', colors.red);
@@ -291,15 +303,6 @@ async function publishSnapshot(otpFlag = '') {
     process.exit(0);
   }
 
-  // Check npm authentication
-  section('NPM authentication');
-  if (!checkNpmAuth()) {
-    log('  ✗ Not logged in to npm', colors.red);
-    log('  Run: npm login', colors.yellow);
-    process.exit(1);
-  }
-  log('  ✓ Authenticated', colors.green);
-
   // Update version in package.json
   section('Version update');
   updatePackageVersion(snapshotVersion);
@@ -310,7 +313,7 @@ async function publishSnapshot(otpFlag = '') {
   try {
     const publishCmd = `npm publish --tag snapshot${otpFlag ? ' ' + otpFlag : ''}`;
     execCommand(publishCmd, 'Publishing snapshot');
-  } catch (error) {
+  } catch {
     // Restore version on failure
     updatePackageVersion(currentVersion);
     log('  ✗ Publishing failed, version restored', colors.red);
@@ -448,7 +451,7 @@ async function publishFinal(otpFlag = '') {
         `gh release create ${tag} --title "Release ${newVersion}" --notes-file ${tempFile}`,
         'Creating GitHub release'
       );
-    } catch (error) {
+    } catch {
       log('  ⚠ Could not create GitHub release automatically', colors.yellow);
       log(`  Create manually: https://github.com/scherler/sirocco-wc/releases/new?tag=v${newVersion}`, colors.blue);
     }
