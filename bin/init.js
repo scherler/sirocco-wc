@@ -50,6 +50,23 @@ module.exports = (logger, options) => {
         shell.mv(`${localPathTmp}/*`, localPath);
         shell.rm('-rf', localPathTmp)
 
+        // index.html's <script> tag points at [MAIN]/[INDEX] — the default
+        // template ships no source files at all, so without this the very
+        // first `yarn build`/`yarn start` fails immediately with "Entry ...
+        // does not exist". Only create it if the template didn't already
+        // provide one (the showcase template ships a real entry point).
+        const entryDir = `${localPath}/${result.Main}`;
+        const entryFile = `${entryDir}/${result.Index}`;
+        if (!fs.existsSync(entryFile)) {
+            shell.mkdir('-p', entryDir);
+            fs.writeFileSync(
+                entryFile,
+                "// Entry point — import and mount your root component here, e.g.:\n" +
+                "// import './components/App';\n"
+            );
+            logger.info(`✔ Created starter entry point at ${result.Main}/${result.Index}`);
+        }
+
         logger.info("✔ Success!");
         if (!process.env.SWC_SKIP_POSTINIT) {
             const run = (cmd, description) => {

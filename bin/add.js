@@ -7,7 +7,11 @@ module.exports = (logger, args, options) => {
     const componentType = options.type;
 
     // main
-    const newClass = newComponent.charAt(0).toUpperCase() + newComponent.slice(1);
+    const newClass = newComponent
+        .split(/[-_\s]+/)
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join('');
     const sourceCopmponents = path.join(source, componentType);
     const sourceDir = path.join(sourceCopmponents, newComponent);
 
@@ -20,7 +24,7 @@ module.exports = (logger, args, options) => {
 export { default as ${newClass}Style } from './${newClass}.styles';
 `;
     const templateTs = `import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators'
+import { customElement } from 'lit/decorators.js'
 import Styles from './${newClass}.styles';
 
 @customElement('${prefix}${newComponent}')
