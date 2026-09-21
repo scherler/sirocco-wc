@@ -7,7 +7,7 @@ export class Card extends LitElement {
   static styles = [styles];
 
   @property({ type: String })
-  title = '';
+  cardTitle = '';
 
   @property({ type: String })
   icon = '';
@@ -36,13 +36,13 @@ export class Card extends LitElement {
       <div class="p-6 flex flex-col h-full">
         <div class="flex items-center gap-3 mb-4">
           <div class="card-icon-bg">
-            <span class="text-2xl" role="img" aria-label="${this.title}">
+            <span class="text-2xl" role="img" aria-label="${this.cardTitle}">
               ${this.icon}
             </span>
           </div>
           <div class="flex-1 min-w-0">
             <h3 class="card-title">
-              ${this.title}
+              ${this.cardTitle}
             </h3>
             ${this.href
               ? html`
