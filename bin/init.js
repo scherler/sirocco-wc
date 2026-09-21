@@ -52,16 +52,20 @@ module.exports = (logger, options) => {
 
         logger.info("✔ Success!");
         if (!process.env.SWC_SKIP_POSTINIT) {
-            logger.info("Setting up Yarn 4.18.0 (Berry)...");
-            shell.exec('yarn set version 4.18.0')
-            logger.info("Installing dependencies...");
-            shell.exec('yarn install')
-            logger.info("Installing Yarn interactive tools plugin...");
-            shell.exec('yarn plugin import interactive-tools')
-            logger.info("Installing Yarn TypeScript plugin (manages @types/* dependencies automatically)...");
-            shell.exec('yarn plugin import typescript')
-            logger.info("Setting up VSCode SDKs...");
-            shell.exec('yarn dlx @yarnpkg/sdks vscode')
+            const run = (cmd, description) => {
+                logger.info(`${description}...`);
+                const result = shell.exec(cmd);
+                if (result.code !== 0) {
+                    logger.error(`✗ ${description} failed (exit code ${result.code}). Stopping — fix the error above and re-run the remaining setup manually:`);
+                    logger.error(`  yarn set version 4.18.0 && yarn install && yarn dlx @yarnpkg/sdks vscode`);
+                    process.exit(result.code);
+                }
+            };
+            run('yarn set version 4.18.0', 'Setting up Yarn 4.18.0 (Berry)');
+            run('yarn install', 'Installing dependencies');
+            // interactive-tools and typescript are built into Yarn 4.18.0 — `yarn plugin
+            // import` now errors ("already installed") if you ask for either explicitly.
+            run('yarn dlx @yarnpkg/sdks vscode', 'Setting up VSCode SDKs');
         }
         logger.info("⚠️Please make sure to update the index.html to point to the correct entrypoint in your js code.⚠️");
     });
