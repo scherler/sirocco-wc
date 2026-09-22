@@ -19,7 +19,7 @@ It would have been shorter to hand-write one `.ts` file. It is a package with it
 own `package.json`, its own `lit` dependency, its own `tsconfig.json` and its own
 `node_modules` because that is what makes the PoC prove anything:
 
-- **It gets the CLI from the published npm package.** `sirocco-wc@2.0.0-snap` is
+- **It gets the CLI from the published npm package.** `sirocco-wc@2.0.0` is
   a `devDependency` here, so generation runs the same published artifact an
   external consumer would install — not this repo's `bin/`. Nothing in
   `examples/` depends on the root repo being installed, or on Yarn/PnP.

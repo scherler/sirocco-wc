@@ -377,7 +377,7 @@ The root sirocco-wc repo uses Yarn Berry with PnP (`.yarnrc.yml`, `.pnp.cjs`).
 - It is the realistic consumer. A React app is not going to adopt Yarn Berry PnP
   in order to consume one web component.
 - It keeps the PoC honest. `lit-component` gets the `sirocco-wc` CLI from the
-  **published npm package** (`sirocco-wc@2.0.0-snap`, a `devDependency`), the
+  **published npm package** (`sirocco-wc@2.0.0`, a `devDependency`), the
   same way any external consumer would — not from the repo's own `bin/`. Nothing
   here depends on the root repo being installed.
 - The root `.gitignore` already ignores `node_modules` (line 8) and `dist`
@@ -514,7 +514,7 @@ recalled.
 
 | | Version |
 | --- | --- |
-| `sirocco-wc` (published npm package, generated the component) | `2.0.0-snap` |
+| `sirocco-wc` (published npm package, generated the component) | `2.0.0` |
 | `lit` | `3.3.3` |
 | `react` / `react-dom` | `19.3.0` |
 | `@types/react` / `@types/react-dom` | `19.3.0` |
