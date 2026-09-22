@@ -12,7 +12,7 @@ export class Greetingcard extends LitElement {
 
   render() {
     return html`
-      <button @click=${this._onClick}>Hello, ${this.name}</button>
+      <button type="button" @click=${this._onClick}>Hello, ${this.name}</button>
       <ul>
         ${(this.items ?? []).map((item) => html`<li>${item}</li>`)}
       </ul>
