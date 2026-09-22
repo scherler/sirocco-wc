@@ -16,17 +16,17 @@ export class App extends LitElement {
   @state()
   private tutorialSection?: string;
 
-  private navigateTo(page: Page, tutorialId?: string) {
+  private navigateTo = (page: Page, tutorialId?: string) => {
     this.currentPage = page;
     this.tutorialSection = tutorialId;
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  };
 
   private renderHome() {
     return html`
       <div class="app-container">
-        <swc-header .onNavigate=${this.navigateTo.bind(this)}></swc-header>
-        <swc-hero .onNavigate=${this.navigateTo.bind(this)}></swc-hero>
+        <swc-header .onNavigate=${this.navigateTo}></swc-header>
+        <swc-hero .onNavigate=${this.navigateTo}></swc-hero>
         <swc-footer></swc-footer>
       </div>
     `;
@@ -35,7 +35,7 @@ export class App extends LitElement {
   private renderTutorial() {
     return html`
       <div class="app-container">
-        <swc-header .onNavigate=${this.navigateTo.bind(this)}></swc-header>
+        <swc-header .onNavigate=${this.navigateTo}></swc-header>
         <swc-tutorial .initialSection=${this.tutorialSection}></swc-tutorial>
         <swc-footer></swc-footer>
       </div>

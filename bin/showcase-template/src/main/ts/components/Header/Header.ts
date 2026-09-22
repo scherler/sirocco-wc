@@ -31,7 +31,7 @@ export class Header extends LitElement {
                   sirocco-wc
                 </button>
                 <span class="very-muted-text ml-2">
-                  Version 1.1.25
+                  Version [SVERSION]
                 </span>
               </div>
               <div class="hidden md:block ml-10">

@@ -24,14 +24,14 @@ program
     .option("-t, --type <type>", "Component Type", {
         default: defaultComponentType,
     })
-    .action(({ logger, args, options }) => {
+    .action(async ({ logger, args, options }) => {
         add(logger, args, options);
-        buildCss(logger);
+        await buildCss(logger);
     })
     .command("buildCss", "Building style.ts files")
     .alias("bc")
-    .action(({ logger }) => {
-        buildCss(logger);
+    .action(async ({ logger }) => {
+        await buildCss(logger);
     })
     .command("watchCss", "Watch changes and rebuild")
     .alias("wc")

@@ -20,8 +20,9 @@ Public API reference and examples.
 
 The primary documentation is in the root:
 - `/CLAUDE.md` - High-level project guidance
+- `/AGENTS.md` - Thin pointer to CLAUDE.md for agent tooling
 - `/README.md` - User documentation
-- `/.clauderc-personalities/` - Expert personalities
+- `/.claude/skills/frontend-dev/` - Component patterns, theming, accessibility
 
 Additional technical docs will be added here as needed.
 

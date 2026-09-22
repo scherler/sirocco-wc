@@ -16,11 +16,11 @@ export class Hero extends LitElement {
     }
   }
 
-  private handleTutorialNavigation(tutorialId: string) {
+  private handleTutorialNavigation = (tutorialId: string) => {
     if (this.onNavigate) {
       this.onNavigate('tutorial', tutorialId);
     }
-  }
+  };
 
   render() {
     return html`
@@ -50,48 +50,48 @@ export class Hero extends LitElement {
           <div class="max-w-6xl mx-auto">
             <swc-carousel>
               <swc-card
-                title="Quick Start"
+                cardTitle="Quick Start"
                 icon="🚀"
                 href="https://github.com/scherler/sirocco-wc"
                 description="Get started with Sirocco in minutes. Learn the essential commands to scaffold and develop your project."
                 tutorialId="quick-start"
-                .onNavigate=${this.handleTutorialNavigation.bind(this)}
+                .onNavigate=${this.handleTutorialNavigation}
               ></swc-card>
 
               <swc-card
-                title="Accessibility"
+                cardTitle="Accessibility"
                 icon="♿"
                 href="https://www.w3.org/WAI/WCAG21/quickref/"
                 description="Build inclusive web components following WCAG guidelines. Learn ARIA labels, keyboard navigation with a practical carousel example."
                 tutorialId="accessibility"
-                .onNavigate=${this.handleTutorialNavigation.bind(this)}
+                .onNavigate=${this.handleTutorialNavigation}
               ></swc-card>
 
               <swc-card
-                title="Theming & Dark Mode"
+                cardTitle="Theming &amp; Dark Mode"
                 icon="🎨"
                 href="https://tailwindcss.com/docs/theme"
                 description="Complete theming system with Tailwind, CSS variables, and dark mode. Learn the complete flow from config to components."
                 tutorialId="theming"
-                .onNavigate=${this.handleTutorialNavigation.bind(this)}
+                .onNavigate=${this.handleTutorialNavigation}
               ></swc-card>
 
               <swc-card
-                title="Performance"
+                cardTitle="Performance"
                 icon="⚡"
                 href="https://lit.dev/docs/components/lifecycle/"
                 description="Optimize Lit components with efficient state management. Learn lifecycle methods, reactive properties, and CSS transforms."
                 tutorialId="performance"
-                .onNavigate=${this.handleTutorialNavigation.bind(this)}
+                .onNavigate=${this.handleTutorialNavigation}
               ></swc-card>
 
               <swc-card
-                title="Material Components"
+                cardTitle="Material Components"
                 icon="🧩"
                 href="https://github.com/material-components/material-web"
                 description="Google's Material Design web components built with Lit. Learn the Sirocco best practice for integration."
                 tutorialId="material-components"
-                .onNavigate=${this.handleTutorialNavigation.bind(this)}
+                .onNavigate=${this.handleTutorialNavigation}
               ></swc-card>
             </swc-carousel>
           </div>

@@ -27,7 +27,7 @@ export class Carousel extends LitElement {
     });
   }
 
-  private scroll(direction: 'left' | 'right') {
+  private scrollCarousel(direction: 'left' | 'right') {
     const slot = this.shadowRoot?.querySelector('slot');
     const cards = slot?.assignedElements() || [];
     const totalCards = cards.length;
@@ -56,7 +56,7 @@ export class Carousel extends LitElement {
     return html`
       <div class="carousel-wrapper relative mx-auto" style="width: ${this.containerWidth};">
         <button
-          @click=${() => this.scroll('left')}
+          @click=${() => this.scrollCarousel('left')}
           class="carousel-button absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 w-12 h-12 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all nav-button"
           style="left: -1.5rem;"
           aria-label="Previous"
@@ -77,7 +77,7 @@ export class Carousel extends LitElement {
         </div>
 
         <button
-          @click=${() => this.scroll('right')}
+          @click=${() => this.scrollCarousel('right')}
           class="carousel-button absolute right-1/2 top-1/2 -translate-y-1/2 translate-x-1/2 z-20 w-12 h-12 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all nav-button"
           style="right: -1.5rem;"
           aria-label="Next"

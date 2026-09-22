@@ -27,10 +27,10 @@ export class ThemeToggle extends LitElement {
   private handleThemeChange(theme: Theme) {
     this.currentTheme = theme;
     localStorage.setItem('theme', theme);
-    this.applyTheme(theme);
+    ThemeToggle.applyTheme(theme);
   }
 
-  private applyTheme(theme: Theme) {
+  private static applyTheme(theme: Theme) {
     const root = document.documentElement;
 
     if (theme === 'auto') {
