@@ -65,9 +65,10 @@ el.getAttribute('items')    // null  ← no attribute was ever set
 
 No attribute exists, so no serialisation and no reparse happened at all.
 
-The one thing React 19 still does *not* give you is a JSX form for custom events
-— there is no `onGreetingClicked` prop. Event listening stays imperative; see
-[Custom events](#custom-events-no-jsx-form-on-any-react-version).
+The one thing React 19 does *not* give you is a JSX form for custom events
+— there is no `onGreetingClicked` prop. Custom events are not part of React's
+event mapping. Event listening stays imperative; see
+[Custom events](#custom-events-imperative-listening-required).
 
 ### Before React 19 — refs or `@lit/react`
 
@@ -154,10 +155,12 @@ array. Two caveats make this a curiosity rather than a pattern:
 - It does **not** apply if the property is declared `attribute: false`
   (property-only, no attribute reflection), or with a type Lit's converter does
   not JSON-decode, or with a custom `converter`. Then only forms 1 and 3 work.
-- Lit deliberately **does not throw** on invalid JSON — it catches and assigns
-  `null`. That is exactly why the pre-19 `"tea,coffee"` stringification fails
-  *silently*: `JSON.parse("tea,coffee")` throws, so the property becomes `null`
-  and you get an empty list with a clean console.
+- Lit deliberately **does not throw** on invalid JSON — it catches the error and
+  assigns `null`. That is exactly why the pre-19 `"tea,coffee"` stringification
+  fails: `JSON.parse("tea,coffee")` throws internally, so the property becomes
+  `null`. A render that calls `this.items.map(...)` then crashes; a null-safe
+  render (`(this.items ?? []).map(...)`) gets an empty list with a console warning
+  from Lit's error handler.
 
 **3. Imperative assignment via a ref — the pre-19 fallback.**
 
@@ -169,11 +172,12 @@ useEffect(() => {
 
 Bypasses attributes entirely. Correct on any React version, required pre-19.
 
-### Custom events: no JSX form on any React version
+### Custom events: imperative listening required
 
-JSX has no `onGreetingClicked` prop — React only maps its own known event names.
-Listening to a Lit `CustomEvent` means `addEventListener` on a ref, inside
-`useEffect`, with cleanup:
+React 19 added first-class custom-element support but **not** for custom events.
+JSX still has no `onGreetingClicked` prop — React maps only its own known event
+names, not vendor events. Listening to a Lit `CustomEvent` means `addEventListener`
+on a ref, inside `useEffect`, with cleanup:
 
 ```tsx
 const cardRef = useRef<HTMLElement>(null)
@@ -248,7 +252,7 @@ Measured in the running page:
 | | `ul` in host document | `ul` inside shadow root |
 | --- | --- | --- |
 | `border-style` | `dashed` | `none` |
-| `list-style-type` | `square` | `disc` (UA default) |
+| `list-style-type` | `square` | `none` (Tailwind preflight resets `ol`/`ul` in shadow root) |
 | `li` `text-transform` | `uppercase` | `none` |
 
 `document.querySelectorAll('demo-greetingcard button').length` is `0`.

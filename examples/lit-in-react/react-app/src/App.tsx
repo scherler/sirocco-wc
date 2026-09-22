@@ -57,8 +57,8 @@ function App() {
     setLastGreeted(name)
   }, [])
 
-  // Custom events have no JSX prop form: there is no `onGreetingClicked`.
-  // Listening is imperative, via a ref, with cleanup.
+  // Custom events are not in React's event map: there is no `onGreetingClicked`.
+  // Listening to Lit's CustomEvent is imperative, via a ref, with cleanup.
   useEffect(() => {
     const el = cardRef.current
     if (!el) return

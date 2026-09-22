@@ -14,7 +14,7 @@ export class Greetingcard extends LitElement {
     return html`
       <button @click=${this._onClick}>Hello, ${this.name}</button>
       <ul>
-        ${this.items.map((item) => html`<li>${item}</li>`)}
+        ${(this.items ?? []).map((item) => html`<li>${item}</li>`)}
       </ul>
     `;
   }
