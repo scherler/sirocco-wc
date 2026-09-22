@@ -19,11 +19,6 @@
  * `test` is deliberately NOT run: no template ships any test files today and
  * the harness environment has no Playwright browsers installed.
  *
- * `lint` is recorded and reported but excluded from the pass/fail
- * determination: both templates carry a pre-existing ESLint 9 flat-config
- * incompatibility (legacy `eslintConfig` + `--ext` with no `eslint.config.js`)
- * that is out of scope here. See NON_BLOCKING_STEPS below.
- *
  * Every child process is spawned with an argv array -- never a shell string.
  *
  * Usage: node scripts/validate-templates.js [--keep] [--only=default|showcase]
@@ -53,9 +48,6 @@ const PROMPT_TOKEN = 'prompt: ';
 const PROMPT_IDLE_NUDGE_MS = 5000;
 const PROMPT_MAX_ANSWERS = PROMPT_FIELD_COUNT + 4;
 const SCAFFOLD_TIMEOUT_MS = 120000;
-
-// Steps whose failure is reported but does NOT flip the overall exit code.
-const NON_BLOCKING_STEPS = new Set(['lint']);
 
 const TEMPLATES = ['default', 'showcase'];
 
@@ -247,7 +239,6 @@ async function validateTemplate(template, options) {
 function statusLabel(step) {
   if (step.ok) return 'PASS';
   if (step.advisory) return 'FAIL (advisory, non-blocking)';
-  if (NON_BLOCKING_STEPS.has(step.name)) return 'FAIL (known baseline, non-blocking)';
   return 'FAIL';
 }
 
@@ -281,7 +272,7 @@ async function main() {
       }
     });
     result.steps.forEach(step => {
-      if (!step.ok && !step.advisory && !NON_BLOCKING_STEPS.has(step.name)) {
+      if (!step.ok && !step.advisory) {
         hasBlockingFailure = true;
       }
     });
